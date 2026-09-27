@@ -25,6 +25,11 @@ class Erabiltzailea extends Authenticatable
         'pasahitza'
     ];
 
+    public function getAuthPasswordName()
+    {
+        return 'pasahitza';
+    }
+
     public function getAuthPassword()
     {
         return $this->pasahitza;
