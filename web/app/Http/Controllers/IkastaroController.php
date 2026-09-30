@@ -94,11 +94,13 @@ class IkastaroController extends Controller
         ], ['izena' => 'Izena', 'abizenak' => 'Abizenak', 'emaila' => 'Helbide elektronikoa']);
 
         $role = Rola::firstOrCreate(['rola_izena' => 'ikasleak'], ['deskribapena' => 'Ikasleak']);
-        Erabiltzailea::create([
+        $student = Erabiltzailea::create([
             ...$data, 'id_rola' => $role->id_rola, 'pasahitza' => null, 'aktibo' => false,
         ]);
 
-        return redirect()->route('administrazioa')->with('status', 'Ikaslea gehitu da. Orain bere emailarekin erregistra daiteke.');
+        return redirect()->route('administrazioa')
+            ->with('created_student_id', $student->id_erabiltzailea)
+            ->with('status', 'Ikaslea gehitu da. Orain bere emailarekin erregistra daiteke.');
     }
 
     public function enroll(Request $request, Ikastaroa $ikastaroa)

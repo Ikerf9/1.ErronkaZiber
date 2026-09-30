@@ -1,37 +1,161 @@
-:root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#172b3a;background:#f2f6f8;font-synthesis:none}
-*{box-sizing:border-box}body{margin:0}a{color:inherit}h1{font-size:2rem;letter-spacing:-.04em;margin:16px 0 10px}h2{font-size:1rem;margin:0}
-.login-page{min-height:100vh;min-height:100dvh;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at top left,#d6eae6,transparent 60%),#f2f6f8}
-.login-card{width:100%;max-width:440px;background:#fff;border:1px solid #dde7e9;border-radius:22px;padding:40px;box-shadow:0 18px 60px #183b4710}
-.brand,.eyebrow{font-size:.72rem;font-weight:800;letter-spacing:.14em;color:#176b61;text-decoration:none}
-.login-icon{margin-top:30px;background:#e6f2ef;width:52px;height:52px;border-radius:15px;display:grid;place-items:center;font-size:1.4rem}
-.subtitle{color:#5e707c;line-height:1.65;margin:0 0 28px;font-size:.95rem}
-label{display:block;font-size:.85rem;font-weight:650;margin-bottom:9px}
-input{display:block;width:100%;padding:13px 14px;border:1px solid #bbcbd2;border-radius:9px;font:inherit;margin-bottom:21px;background:#fcfdfd;color:#172b3a}
-input:focus-visible,button:focus-visible,a:focus-visible,.table-scroll:focus-visible{outline:3px solid #80cabb;outline-offset:3px}
-button{border:0;background:#176b61;color:#fff;font:inherit;font-weight:650;padding:13px 18px;border-radius:9px;cursor:pointer}
-button:hover{background:#10564e}.login-card button{width:100%;display:flex;justify-content:space-between;margin-top:8px}
-.access-note{text-align:center;color:#60737d;font-size:.76rem;line-height:1.6;margin:25px 0 0}
-.error{background:#fff0f0;border:1px solid #efc8c8;color:#982b2b;border-radius:9px;padding:12px 14px;margin-bottom:20px;font-size:.85rem}.error p{margin:0;line-height:1.6}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px max(24px,calc((100vw - 1160px)/2));background:#fff;border-bottom:1px solid #dde7e9}
-.account{display:flex;align-items:center;gap:18px;font-size:.85rem}.secondary{background:#edf4f2;color:#155c53;font-size:.82rem}.secondary:hover{background:#d9ebe5}
-.dashboard{max-width:1208px;margin:48px auto;padding:0 24px}.table-card{background:white;border:1px solid #dce5e8;border-radius:15px;overflow:hidden}.table-heading{padding:23px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.count{font-size:.78rem;color:#506773;background:#f0f5f6;padding:6px 10px;border-radius:20px}.table-scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;text-align:left;white-space:nowrap}th{background:#f7fafb;color:#526974;font-size:.75rem;font-weight:650}td,th{padding:16px 22px;border-top:1px solid #e6edef}td{font-size:.85rem}tbody tr:hover{background:#fafcfc}.badge{font-size:.75rem;border-radius:20px;padding:5px 10px}.active{color:#186447;background:#e8f5ed}.inactive{color:#675c48;background:#f5f0e7}.empty{text-align:center;color:#60737d;padding:40px}
-@media(max-width:600px){.login-card{padding:28px 24px}.topbar{padding:16px;flex-wrap:wrap}.account{gap:10px}.dashboard{margin:32px auto;padding:0 16px}.table-heading{padding:18px;flex-wrap:wrap}h1{font-size:1.8rem}}
+:root {
+    font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+    font-synthesis:none;
+    --ink:#202c3c;
+    --muted:#5e6b7c;
+    --primary:#245bcc;
+    --primary-hover:#1947a6;
+    --border:#dce2e9;
+    --surface:#fff;
+    --background:#f3f5f7;
+    color:var(--ink);
+    background:var(--background);
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--background)}
+a{color:inherit;text-underline-offset:4px}
+h1{font-size:clamp(1.8rem,3.5vw,2.5rem);line-height:1.2;letter-spacing:-.045em;margin:14px 0 14px;font-weight:700}
+h2{font-size:1rem;margin:0}
+.brand,.eyebrow{font-size:.7rem;font-weight:750;letter-spacing:.13em;text-decoration:none;color:var(--muted)}
+.subtitle{color:var(--muted);line-height:1.7;margin:0 0 28px;font-size:.95rem}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px max(24px,calc((100vw - 1160px)/2));background:#182638;color:#edf2f8;border-bottom:1px solid #29394d}
+.topbar .brand{color:#fff;font-size:.8rem;letter-spacing:.16em}
+.account{display:flex;align-items:center;flex-wrap:wrap;gap:20px;font-size:.85rem}
+.account>span{color:#bfcbd9}
+.account>a:not(.button-link){text-decoration:none;font-weight:600}
+.account>a:not(.button-link):hover{text-decoration:underline}
+.dashboard{max-width:1208px;margin:48px auto;padding:0 24px}
+.dashboard>.eyebrow{display:inline-block;color:var(--primary)}
+.dashboard>h1+.subtitle{max-width:720px;margin-bottom:36px}
+label{display:block;font-size:.82rem;font-weight:650;margin-bottom:9px}
+input{display:block;width:100%;padding:12px 14px;border:1px solid #bdc7d3;border-radius:6px;font:inherit;margin-bottom:21px;background:var(--surface);color:var(--ink)}
+input:focus-visible,button:focus-visible,a:focus-visible,.table-scroll:focus-visible{outline:3px solid #739bc4;outline-offset:3px}
+button,.button-link{border:1px solid transparent;background:var(--primary);color:#fff;font:inherit;font-size:.88rem;font-weight:650;padding:12px 18px;border-radius:6px;cursor:pointer;transition:background-color .18s ease}
+button:hover,.button-link:hover{background:var(--primary-hover)}
+.button-link{display:inline-block;text-decoration:none}
+.secondary{background:#edf1f5;color:#34465b;font-size:.82rem;border-color:var(--border)}
+.secondary:hover{background:#dfe6ee}
+.topbar .secondary{background:transparent;color:#e3ebf5;border-color:#526176}
+.topbar .secondary:hover{background:#2c3e54}
+.topbar .button-link{background:#fff;color:#182638}
+.topbar .button-link:hover{background:#e1e8f0}
+button:disabled{background:#e7ebef;color:#626e7c;cursor:not-allowed}
+.student-panel{padding:28px;background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:28px}
+.student-panel h2{font-size:1.1rem;margin-bottom:10px}
+.student-form{display:grid;grid-template-columns:1fr 1fr 1.5fr auto;gap:16px;align-items:end}
+.student-form input{margin:0}
+.table-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.table-heading{padding:22px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.table-heading h3{margin:0;font-size:1.05rem}
+.count{font-size:.75rem;color:#4c5d70;background:#edf1f5;padding:6px 10px;border-radius:5px;font-weight:600}
+.table-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;text-align:left;white-space:nowrap}
+th{background:#f6f8fa;color:#536174;font-size:.73rem;font-weight:650}
+td,th{padding:16px 22px;border-top:1px solid #e7ebf0}
+td{font-size:.85rem}
+tbody tr:hover{background:#f5f8fc}
+.badge{display:inline-block;font-size:.75rem;border-radius:5px;padding:5px 10px}
+.active{color:#286149;background:#edf5f0}
+.inactive{color:#566171;background:#edf0f4}
+.empty{text-align:center;color:var(--muted);padding:40px}
+.success{background:#edf5f0;color:#286149;border:1px solid #cbded2;padding:14px 18px;border-radius:6px;line-height:1.6}
+.error{background:#fcf1f1;border:1px solid #e8caca;color:#982b2b;border-radius:6px;padding:12px 14px;margin-bottom:20px;font-size:.85rem}
+.error p{margin:0;line-height:1.6}
+.catalog-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px;padding-top:24px;border-top:1px solid var(--border)}
+.catalog-heading h2{font-size:1.05rem}
+.course-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.course-card{min-width:0;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:30px;display:flex;flex-direction:column;transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease}
+.course-card:hover{border-color:#9cb7e8;box-shadow:0 14px 32px #18263812}
+.course-card>.eyebrow{color:var(--primary);letter-spacing:.1em;align-self:flex-start;background:#edf3ff;padding:8px 12px;border-radius:7px}
+.course-card h2{font-size:1.35rem;line-height:1.35;letter-spacing:-.025em;margin:14px 0 12px}
+.course-card .subtitle{flex:1}
+.course-details{display:flex;gap:20px;flex-wrap:wrap;margin:0 0 24px;padding:18px 0;border-top:1px solid #e7ebf0}
+.course-details dt{font-size:.73rem;color:var(--muted);margin-bottom:6px}
+.course-details dd{margin:0;font-size:.85rem;font-weight:600}
+.course-action{border-top:1px solid #e7ebf0;padding-top:20px;font-size:.88rem}
+.course-action a{color:var(--primary);font-weight:650}
+.course-management{margin-top:44px}
+.course-management>h2{font-size:1.35rem;letter-spacing:-.025em;margin-bottom:12px}
+.course-admin-card{margin-bottom:22px}
+.course-roster{margin-top:20px;min-width:0}
+.course-roster h3{font-size:.95rem;margin:0 0 16px}
+.course-roster .subtitle{margin-bottom:18px}
+.course-admin-card .course-roster{margin:0}
+.course-admin-card .course-roster>h3,.course-admin-card .course-roster>.subtitle{padding:0 22px}
+.course-roster td,.course-roster th{padding:12px 16px}
+.login-page{min-height:100vh;min-height:100dvh;display:grid;place-items:center;padding:24px;background:#182d50}
+.login-card{width:100%;max-width:440px;background:var(--surface);border:1px solid var(--border);border-top:4px solid var(--primary);border-radius:16px;padding:40px;box-shadow:0 16px 45px #1826380a}
+.login-card .brand{color:var(--primary)}
+.login-icon{margin-top:30px;background:#edf1f5;width:48px;height:48px;border-radius:8px;display:grid;place-items:center;font-size:1.25rem}
+.login-card button{width:100%;display:flex;justify-content:space-between;margin-top:8px}
+.access-note{text-align:center;color:var(--muted);font-size:.76rem;line-height:1.6;margin:25px 0 0}
+.access-note a{color:var(--primary)}
+/* Stronger visual hierarchy with one blue accent. */
+.topbar .brand{display:inline-flex;align-items:center;gap:12px}
+.topbar .brand::before{content:"";width:12px;height:22px;flex-shrink:0;border:2px solid #91b8ff;border-radius:3px;transform:skewY(-14deg);box-shadow:5px 3px 0 -1px #477bd7}
+.page-hero{position:relative;isolation:isolate;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.65fr) minmax(220px,1fr);align-items:center;gap:48px;padding:48px;margin-bottom:36px;border-radius:22px;background:#182d50;color:#fff;box-shadow:0 16px 36px #182d5014}
+.page-hero::after{content:"";position:absolute;z-index:-1;right:-130px;top:-230px;width:600px;height:600px;border:1px solid #ffffff12;border-radius:50%;box-shadow:0 0 0 65px #ffffff04,0 0 0 130px #ffffff03;pointer-events:none}
+.page-hero .eyebrow{color:#abc8ff;font-size:.68rem;letter-spacing:.18em}
+.page-hero h1{font-size:clamp(2rem,4.2vw,3.4rem);max-width:620px;line-height:1.08;letter-spacing:-.045em;margin:20px 0}
+.page-hero .subtitle{color:#c2d0e3;max-width:490px;margin-bottom:26px}
+.hero-button{display:inline-flex;align-items:center;justify-content:space-between;gap:26px;background:#fff;color:#1e427d;padding:14px 20px;border-radius:8px}
+.hero-button:hover{background:#e3edff;color:#173665}
+.hero-summary{min-width:0;margin:0;padding:28px;background:#ffffff08;border:1px solid #ffffff26;border-radius:16px;display:flex;flex-direction:column;color:#d7e3f5;font-size:.88rem}
+.summary-label{font-size:.62rem;letter-spacing:.14em;color:#abc8ff}
+.summary-number{display:block;font-size:5rem;line-height:1.1;letter-spacing:-.07em;color:#fff;margin:16px 0 8px;font-weight:650}
+.summary-footer{margin-top:24px;padding-top:18px;border-top:1px solid #ffffff24;font-size:.75rem}
+.admin-hero{padding:36px 40px}
+.admin-hero h1{font-size:clamp(2rem,4vw,3rem)}
+.admin-summary{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.admin-summary dt{font-size:.75rem;color:#c2d0e3}
+.admin-summary dd{font-size:2.8rem;letter-spacing:-.05em;font-weight:650;color:#fff;margin:10px 0 0}
+.catalog-heading{border-top:0;padding-top:6px;scroll-margin-top:24px}
+.catalog-heading h2{font-size:1.4rem;letter-spacing:-.03em}
+.count{background:#e8eef9;color:#345887;border-radius:20px;padding:7px 12px}
+.student-panel{border-radius:14px;box-shadow:0 6px 20px #18263805;scroll-margin-top:24px}
+.student-panel h2{display:flex;align-items:center;gap:12px}
+.student-panel h2::before{content:"+";display:grid;place-items:center;width:30px;height:30px;flex-shrink:0;background:#edf3ff;color:var(--primary);border-radius:8px;font-size:1.3rem;font-weight:400}
+.table-card{border-radius:14px}
+.table-heading{background:#fafbfd}
+.course-details{background:#f6f8fc;border-top:0;padding:16px;border-radius:10px;gap:18px}
+.course-details>div{flex:1 1 auto}
+.course-action a{display:inline-block;text-decoration:none;padding:6px 0}
+.course-action a:hover{text-decoration:underline}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){.course-card:hover{transform:translateY(-4px)}}
+@media(max-width:850px){
+    .page-hero{gap:24px;padding:32px;grid-template-columns:minmax(0,1.4fr) minmax(200px,1fr)}
+    .hero-summary{padding:22px}
+    .admin-summary{gap:16px}
+}
+@media(max-width:600px){
+    .page-hero{grid-template-columns:1fr;padding:28px 24px;border-radius:16px;gap:28px}
+    .hero-summary{padding:20px}
+    .summary-number{font-size:3.5rem;margin:10px 0 4px}
+    .summary-footer{margin-top:16px;padding-top:14px}
+    .admin-summary dd{font-size:2.2rem}
+    .page-hero h1{margin-top:16px}
+}
 
-.success{background:#e8f5ed;color:#186447;border:1px solid #b9ddc8;padding:14px 18px;border-radius:9px;line-height:1.6}
-.button-link{display:inline-block;background:#176b61;color:white;padding:12px 18px;border-radius:9px;text-decoration:none;font-weight:650}
-.catalog-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
-.course-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
-.course-card{background:white;border:1px solid #dce5e8;border-radius:16px;padding:28px;display:flex;flex-direction:column}
-.course-card h2{font-size:1.3rem;margin:15px 0 12px}.course-card .subtitle{flex:1}
-.course-details{display:flex;gap:24px;flex-wrap:wrap;margin:0 0 24px}.course-details dt{font-size:.75rem;color:#60737d;margin-bottom:5px}.course-details dd{margin:0;font-size:.85rem;font-weight:650}
-.course-action{border-top:1px solid #e6edef;padding-top:20px;font-size:.88rem}.course-action a{color:#176b61;font-weight:650}
-button:disabled{background:#e5ebed;color:#61727a;cursor:not-allowed}
-.student-panel{padding:24px;background:white;border:1px solid #dce5e8;border-radius:15px;margin-bottom:24px}
-.student-panel h2{margin-bottom:12px}.student-form{display:grid;grid-template-columns:1fr 1fr 1.5fr auto;gap:16px;align-items:end}.student-form input{margin:0}.account{flex-wrap:wrap}
+/* Highlight only the newly created student after a successful save. */
+.table-refreshed{animation:table-refresh .45s ease-out}
+.student-created>td{animation:student-highlight 3s ease-out}
+.student-created>td:first-child{box-shadow:inset 3px 0 var(--primary)}
+@keyframes table-refresh{from{opacity:.4;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes student-highlight{0%,30%{background-color:#e0ebf6}100%{background-color:transparent}}
 @media(max-width:850px){.student-form{grid-template-columns:1fr 1fr}}
-@media(max-width:600px){.course-grid,.student-form{grid-template-columns:1fr}.course-card{padding:22px}}
-.course-management{margin-top:36px}.course-management>h2{font-size:1.4rem;margin-bottom:12px}
-.course-admin-card{margin-bottom:22px}.course-roster{margin-top:20px;min-width:0}.course-roster h3{font-size:.95rem;margin:0 0 16px}.course-roster .subtitle{margin-bottom:18px}
-.course-admin-card .course-roster{margin:0}.course-admin-card .course-roster>h3,.course-admin-card .course-roster>.subtitle{padding:0 22px}.table-heading h3{margin:0;font-size:1.1rem}
-.course-roster td,.course-roster th{padding:12px 16px}.course-card{min-width:0}
+@media(max-width:600px){
+    .login-card{padding:28px 24px}
+    .topbar{padding:18px 16px;flex-wrap:wrap}
+    .account{gap:12px}
+    .dashboard{margin:32px auto;padding:0 16px}
+    .table-heading{padding:18px;flex-wrap:wrap}
+    .student-panel,.course-card{padding:22px}
+    .course-grid,.student-form{grid-template-columns:1fr}
+    .catalog-heading{flex-wrap:wrap}
+    .course-details{gap:16px}
+}
+@media(prefers-reduced-motion:reduce){
+    button,.button-link,.course-card{transition:none}
+    .table-refreshed,.student-created>td{animation:none}
+    .student-created>td{background-color:#e0ebf6}
+}

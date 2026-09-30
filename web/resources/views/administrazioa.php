@@ -18,14 +18,23 @@
         </div>
     </header>
     <main class="dashboard">
-        <span class="eyebrow">ORRI NAGUSIA</span>
-        <h1>Erabiltzaileak</h1>
-        <p class="subtitle">Sisteman erregistratutako erabiltzaile guztien zerrenda.</p>
+        <section class="page-hero admin-hero" aria-labelledby="page-title">
+            <div class="hero-copy">
+                <span class="eyebrow">KUDEAKETA GUNEA</span>
+                <h1 id="page-title">Erabiltzaileak</h1>
+                <p class="subtitle">Sisteman erregistratutako erabiltzaile guztien zerrenda.</p>
+                <a class="button-link hero-button" href="#ikasle-berria"><span aria-hidden="true">+</span> Ikaslea gehitu</a>
+            </div>
+            <dl class="hero-summary admin-summary">
+                <div><dt>Erabiltzaileak</dt><dd><?= e($erabiltzaileak->count()) ?></dd></div>
+                <div><dt>Ikastaroak</dt><dd><?= e($ikastaroak->count()) ?></dd></div>
+            </dl>
+        </section>
         <?php if (session('status')): ?><p class="success" role="status"><?= e(session('status')) ?></p><?php endif; ?>
         <?php if ($errors->any()): ?>
             <div class="error" role="alert"><?php foreach ($errors->all() as $error): ?><p><?= e($error) ?></p><?php endforeach; ?></div>
         <?php endif; ?>
-        <section class="student-panel">
+        <section class="student-panel" id="ikasle-berria">
             <h2>Ikasle berria gehitu</h2>
             <p class="subtitle">Gehitu ikaslea aurrez. Ondoren, bere emailarekin erregistratu eta pasahitza aukeratu ahal izango du.</p>
             <form class="student-form" method="post" action="<?= e(route('students.store')) ?>">
@@ -36,14 +45,14 @@
                 <button type="submit">Ikaslea gehitu</button>
             </form>
         </section>
-        <section class="table-card" aria-label="Erabiltzaileen zerrenda">
+        <section class="table-card<?= session('created_student_id') ? ' table-refreshed' : '' ?>" aria-label="Erabiltzaileen zerrenda">
             <div class="table-heading"><h2>Erabiltzaile guztiak</h2><span class="count"><?= e($erabiltzaileak->count()) ?> erabiltzaile</span></div>
             <div class="table-scroll" tabindex="0" role="region" aria-label="Erabiltzaileen taula">
                 <table>
                     <thead><tr><th scope="col">IDa</th><th scope="col">Izena</th><th scope="col">Abizenak</th><th scope="col">Helbide elektronikoa</th><th scope="col">Rolaren IDa</th><th scope="col">Rola</th><th scope="col">Kontuaren egoera</th></tr></thead>
                     <tbody>
                     <?php foreach ($erabiltzaileak as $erabiltzailea): ?>
-                        <tr>
+                        <tr<?= (string) session('created_student_id') === (string) $erabiltzailea->id_erabiltzailea ? ' class="student-created"' : '' ?>>
                             <td><?= e($erabiltzailea->id_erabiltzailea) ?></td>
                             <td><?= e($erabiltzailea->izena) ?></td>
                             <td><?= e($erabiltzailea->abizenak) ?></td>

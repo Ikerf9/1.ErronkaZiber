@@ -26,14 +26,25 @@
     </nav>
 </header>
 <main class="dashboard">
-    <span class="eyebrow">IKASI ETA HAZI</span>
-    <h1>Aurkitu zure hurrengo ikastaroa</h1>
-    <p class="subtitle">Ezagutu ikastetxeko ikastaro guztiak eta aukeratu zure bidea.</p>
+    <section class="page-hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+            <span class="eyebrow">IKASI ETA HAZI</span>
+            <h1 id="page-title">Aurkitu zure hurrengo ikastaroa</h1>
+            <p class="subtitle">Ezagutu ikastetxeko ikastaro guztiak eta aukeratu zure bidea.</p>
+            <a class="button-link hero-button" href="#ikastaroak">Ikastaroak arakatu <span aria-hidden="true">&rarr;</span></a>
+        </div>
+        <div class="hero-summary">
+            <span class="summary-label">ZURE HURRENGO PAUSOA</span>
+            <strong class="summary-number"><?= e($ikastaroak->count()) ?></strong>
+            <span>ikastaro zure aukeran</span>
+            <div class="summary-footer">Ikasi. Garatu. Aurrera egin.</div>
+        </div>
+    </section>
     <?php if (session('status')): ?><p class="success" role="status"><?= e(session('status')) ?></p><?php endif; ?>
     <?php if ($errors->any()): ?>
         <div class="error" role="alert"><?php foreach ($errors->all() as $error): ?><p><?= e($error) ?></p><?php endforeach; ?></div>
     <?php endif; ?>
-    <div class="catalog-heading"><h2>Ikastaro guztiak</h2><span class="count"><?= e($ikastaroak->count()) ?> ikastaro</span></div>
+    <div class="catalog-heading" id="ikastaroak"><h2>Ikastaro guztiak</h2><span class="count"><?= e($ikastaroak->count()) ?> ikastaro</span></div>
     <div class="course-grid">
     <?php foreach ($ikastaroak as $ikastaroa): ?>
         <article class="course-card">
