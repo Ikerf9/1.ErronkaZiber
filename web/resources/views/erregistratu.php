@@ -6,7 +6,7 @@
     <title>Erregistratu | Ikastetxea</title>
     <link rel="stylesheet" href="<?= e(asset('css/administrazioa.css')) ?>">
 </head>
-<body class="login-page">
+<body class="login-page student-page">
 <main class="login-card">
     <a class="brand" href="<?= e(route('home')) ?>">IKASTETXEA</a>
     <h1>Erregistratu</h1>
@@ -28,5 +28,6 @@
     <p class="access-note">Baduzu kontua? <a href="<?= e(route('login')) ?>">Saioa hasi</a></p>
     <p class="access-note"><a href="<?= e(route('home')) ?>">Ikastaroetara itzuli</a></p>
 </main>
+<?= view('student-footer')->render() ?>
 </body>
 </html>

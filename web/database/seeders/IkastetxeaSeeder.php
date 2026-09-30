@@ -27,10 +27,10 @@ class IkastetxeaSeeder extends Seeder
         }
 
         foreach ([
-            ['Web garapena', 'Sortu webguneak HTML, CSS, JavaScript eta PHP erabiliz.', 20],
-            ['Zibersegurtasunaren oinarriak', 'Ikasi sareak, kontuak eta datuak babesten.', 15],
-            ['Datu-baseak eta SQL', 'Diseinatu datu-baseak eta landu SQL kontsultak.', 20],
-            ['Sare informatikoak', 'Konfiguratu sare lokalak eta ezagutu komunikazio-protokoloak.', 18],
+            ['Web garapena', 'Sortu webguneak HTML, CSS, JavaScript eta PHP erabiliz.', Ikastaroa::MAX_CAPACITY],
+            ['Zibersegurtasunaren oinarriak', 'Ikasi sareak, kontuak eta datuak babesten.', Ikastaroa::MAX_CAPACITY],
+            ['Datu-baseak eta SQL', 'Diseinatu datu-baseak eta landu SQL kontsultak.', Ikastaroa::MAX_CAPACITY],
+            ['Sare informatikoak', 'Konfiguratu sare lokalak eta ezagutu komunikazio-protokoloak.', Ikastaroa::MAX_CAPACITY],
         ] as [$title, $description, $capacity]) {
             Ikastaroa::firstOrCreate(['izenburua' => $title], [
                 'deskribapena' => $description, 'edukiera' => $capacity,

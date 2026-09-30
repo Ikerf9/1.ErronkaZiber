@@ -6,7 +6,7 @@
     <title>Ikastaroak | Ikastetxea</title>
     <link rel="stylesheet" href="<?= e(asset('css/administrazioa.css')) ?>">
 </head>
-<body>
+<body class="student-page">
 <header class="topbar">
     <a class="brand" href="<?= e(route('home')) ?>">IKASTETXEA</a>
     <nav class="account" aria-label="Menu nagusia">
@@ -83,5 +83,6 @@
     </div>
     <?php if ($ikastaroak->isEmpty()): ?><p class="empty">Oraindik ez dago ikastarorik.</p><?php endif; ?>
 </main>
+<?= view('student-footer')->render() ?>
 </body>
 </html>

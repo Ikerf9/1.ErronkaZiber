@@ -34,6 +34,26 @@
         <?php if ($errors->any()): ?>
             <div class="error" role="alert"><?php foreach ($errors->all() as $error): ?><p><?= e($error) ?></p><?php endforeach; ?></div>
         <?php endif; ?>
+        <section class="admin-statistics" aria-labelledby="stats-title">
+            <div class="statistics-heading"><h2 id="stats-title">Estatistikak</h2><span>Uneko datuak</span></div>
+            <dl class="stats-grid">
+                <div class="stat-card"><dt>Ikasleak guztira</dt><dd><?= e($stats['students']) ?></dd><p>Administratzaileak kontatu gabe</p></div>
+                <div class="stat-card"><dt>Ikasle aktiboak</dt><dd><?= e($stats['active_students']) ?></dd><p><?= e($stats['inactive_students']) ?> ikasle ez aktibo</p></div>
+                <div class="stat-card"><dt>Matrikula aktiboak</dt><dd><?= e($stats['enrollments']) ?></dd><p>Ikastaro guztietan</p></div>
+                <div class="stat-card"><dt>Plaza libreak</dt><dd><?= e($stats['available']) ?></dd><p><?= e($stats['capacity']) ?> plaza guztira</p></div>
+            </dl>
+            <div class="occupancy-card">
+                <h3>Ikastaroen okupazioa</h3>
+                <p class="subtitle">Matrikula aktiboak eta ikastaro bakoitzeko edukiera.</p>
+                <?php foreach ($courseStats as $courseIndex => $courseStat): ?>
+                    <div class="occupancy-row">
+                        <div class="occupancy-label"><label for="occupancy-<?= e($courseIndex) ?>"><?= e($courseStat['title']) ?></label><span><?= e($courseStat['enrolled']) ?> / <?= e($courseStat['capacity']) ?> &middot; <?= $courseStat['capacity'] > 0 ? e($courseStat['percent']).'%' : 'Edukierarik gabe' ?></span></div>
+                        <progress id="occupancy-<?= e($courseIndex) ?>" value="<?= e(min(100, $courseStat['percent'])) ?>" max="100"><?= e($courseStat['percent']) ?>%</progress>
+                    </div>
+                <?php endforeach; ?>
+                <?php if ($courseStats->isEmpty()): ?><p class="empty">Oraindik ez dago ikastarorik.</p><?php endif; ?>
+            </div>
+        </section>
         <section class="student-panel" id="ikasle-berria">
             <h2>Ikasle berria gehitu</h2>
             <p class="subtitle">Gehitu ikaslea aurrez. Ondoren, bere emailarekin erregistratu eta pasahitza aukeratu ahal izango du.</p>
@@ -47,7 +67,7 @@
         </section>
         <section class="table-card<?= session('created_student_id') ? ' table-refreshed' : '' ?>" aria-label="Erabiltzaileen zerrenda">
             <div class="table-heading"><h2>Erabiltzaile guztiak</h2><span class="count"><?= e($erabiltzaileak->count()) ?> erabiltzaile</span></div>
-            <div class="table-scroll" tabindex="0" role="region" aria-label="Erabiltzaileen taula">
+            <div class="table-scroll users-table-scroll" tabindex="0" role="region" aria-label="Erabiltzaileen taula">
                 <table>
                     <thead><tr><th scope="col">IDa</th><th scope="col">Izena</th><th scope="col">Abizenak</th><th scope="col">Helbide elektronikoa</th><th scope="col">Rolaren IDa</th><th scope="col">Rola</th><th scope="col">Kontuaren egoera</th></tr></thead>
                     <tbody>

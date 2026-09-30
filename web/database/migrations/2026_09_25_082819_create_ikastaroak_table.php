@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id('id_ikastaroa');
             $table->string('izenburua');
             $table->text('deskribapena')->nullable();
-            $table->integer('edukiera');
+            $table->integer('edukiera')->default(30);
             $table->date('hasiera_data');
             $table->date('amaiera_data');
         });

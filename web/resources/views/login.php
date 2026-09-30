@@ -6,7 +6,7 @@
     <title>Saioa hasi | Ikastetxea</title>
     <link rel="stylesheet" href="<?= e(asset('css/administrazioa.css')) ?>">
 </head>
-<body class="login-page">
+<body class="login-page student-page">
     <main class="login-card">
         <span class="brand">IKASTETXEA</span>
         <div class="login-icon" aria-hidden="true">&#128274;</div>
@@ -30,5 +30,6 @@
         </form>
         <p class="access-note"><a href="<?= e(route('register')) ?>">Erregistratu</a> &middot; <a href="<?= e(route('home')) ?>">Ikastaroetara itzuli</a></p>
     </main>
+<?= view('student-footer')->render() ?>
 </body>
 </html>

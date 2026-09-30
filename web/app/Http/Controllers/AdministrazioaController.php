@@ -67,10 +67,32 @@ class AdministrazioaController extends Controller
 
     public function index()
     {
-        return response()->view('administrazioa', [
-            'ikastaroak' => Ikastaroa::with('matrikulak.erabiltzailea')->orderBy('hasiera_data')->get(),
-            'erabiltzaileak' => Erabiltzailea::with('rola')->orderBy('id_erabiltzailea')->get(),
-        ])->header('Cache-Control', 'no-store, private');
+        $ikastaroak = Ikastaroa::with('matrikulak.erabiltzailea')->orderBy('hasiera_data')->get();
+        $erabiltzaileak = Erabiltzailea::with('rola')->orderBy('id_erabiltzailea')->get();
+        $students = $erabiltzaileak->filter(fn ($user) => $user->rola?->rola_izena === 'ikasleak');
+        $courseStats = $ikastaroak->map(function ($course) {
+            $enrolled = $course->matrikulak->where('egoera', 'aktibo')->count();
+            $capacity = max(0, (int) $course->edukiera);
+
+            return [
+                'title' => $course->izenburua,
+                'enrolled' => $enrolled,
+                'capacity' => $capacity,
+                'available' => max(0, $capacity - $enrolled),
+                'percent' => $capacity > 0 ? (int) round($enrolled / $capacity * 100) : 0,
+            ];
+        });
+        $stats = [
+            'students' => $students->count(),
+            'active_students' => $students->where('aktibo', true)->count(),
+            'inactive_students' => $students->where('aktibo', false)->count(),
+            'enrollments' => $courseStats->sum('enrolled'),
+            'available' => $courseStats->sum('available'),
+            'capacity' => $courseStats->sum('capacity'),
+        ];
+
+        return response()->view('administrazioa', compact('ikastaroak', 'erabiltzaileak', 'stats', 'courseStats'))
+            ->header('Cache-Control', 'no-store, private');
     }
 
     public function logout(Request $request)
