@@ -1,510 +1,314 @@
-# ERRONKA 1 — Prebentzio-plana
-## Ikastetxea – Laravel Web Aplikazioa eta Bere Ingurune Osoa
+# Zibersegurtasun Kontzientziazio Plana
+## Ikastetxea – Web Kudeaketa Plataforma
 
 | | |
 |---|---|
 | **Data** | 2026ko urriaren 1a |
 | **Bertsioa** | 1.0 |
-| **Esparrua** | Ikastetxea Laravel aplikazioa, PostgreSQL datu-basea eta garapen/produkzio ingurunea |
-| **Erreferentziak** | OWASP Top 10 (2021) · CIS Benchmarks · DBEO / LOPDGDD · INCIBE |
+| **Esparrua** | Ikastetxea Laravel plataforma eta bere erabiltzaile-komunitate osoa |
+| **Erreferentziak** | DBEO (EB 2016/679) · LOPDGDD · ENS (RD 311/2022) · OWASP Top 10 (2021) · INCIBE · Cyberzaintza |
 | **Sailkapena** | Barne-erabilerarako |
-
----
-
-## Dokumentuaren kontrola
-
-| Bertsioa | Data | Aldaketak |
-|---|---|---|
-| 1.0 | 2026/10/01 | Lehen bertsioa, proiektuaren kode-auditoria egin ondoren |
-
-**Hurrengo berrikuspena:** 2027/01/01 (hiru hilean behin, edo lehenago gorabehera bat edo aldaketa garrantzitsu bat gertatzen bada).
 
 ---
 
 ## Aurkibidea
 
 1. [Sarrera](#1-sarrera)
-2. [Ingurunearen deskribapena](#2-ingurunearen-deskribapena)
-3. [Aktiboen inbentarioa](#3-aktiboen-inbentarioa)
-4. [Arriskuen analisia](#4-arriskuen-analisia)
-5. [Ezarritako prebentzio-neurriak](#5-ezarritako-prebentzio-neurriak)
-6. [Ekintza-plana](#6-ekintza-plana)
-7. [Politikak eta jardunbide egokiak](#7-politikak-eta-jardunbide-egokiak)
-8. [Segurtasun-kopiak eta berreskuratzea](#8-segurtasun-kopiak-eta-berreskuratzea)
-9. [Gorabeheren kudeaketa](#9-gorabeheren-kudeaketa)
-10. [Prestakuntza eta sentsibilizazioa](#10-prestakuntza-eta-sentsibilizazioa)
-11. [Mantentze-egutegia](#11-mantentze-egutegia)
-12. [Adierazleak](#12-adierazleak)
-13. [Rolak eta erantzukizunak](#13-rolak-eta-erantzukizunak)
-- [A eranskina. Egiaztapen-komandoak](#a-eranskina-egiaztapen-komandoak)
-- [B eranskina. Erreferentziak](#b-eranskina-erreferentziak)
+2. [Testuinguru Orokorra](#2-testuinguru-orokorra)
+3. [Lan-ildoak](#3-lan-ildoak)
 
 ---
 
 ## 1. Sarrera
 
-### 1.1 Helburua
+### 1.1. Helburua
 
-Plan honek jasotzen du zer egiten dugun Ikastetxearen web aplikazioaren segurtasun-gorabeherak gertatu aurretik saihesteko, eta zer egingo dugun, hala ere, gertatzen badira. Honetarako balio du:
+Hezkuntza-inguruneak gero eta digitalagoak dira, eta plataforma digitalek funtsezko zeregina betetzen dute ikasleen, irakasleen eta administrazio-langileen arteko harremanetan. Ikastetxearen kudeaketa-plataformak — Laravel 12 eta PostgreSQL oinarriak dituenak — ikasleen datu pertsonalak, matrikulazioak eta administrazio-kredentzialak kudeatzen ditu egunero.
 
-- Zer babestu behar dugun (aktiboak) eta zeren aurka (arriskuak) jakiteko.
-- Dagoeneko funtzionatzen duten neurriak eta nola egiaztatzen diren idatziz uzteko.
-- Proiektuan aurkitutako ahultasun zehatzak dokumentatzeko eta konpontzeko plana izateko.
-- Mantentze-egutegi bat eta gorabeheren aurrean prozedura argi bat izateko.
+Sistemak segurtasun-neurri tekniko sendoak ditu: erabiltzaileen baimenetan oinarritutako sarbide-kontrola (`AdminOnly` middleware bidez), sarrerako datuen balidazioa (`IkastaroController` eta `AdministrazioaController`-en), rate limiting saio-hasieraren aurka (5 saiakeratik gorako blokeo automatikoa), CSRF babesa formulario guztietan eta saio-datuak datu-basean gordetzen dira, ez cookie arruntetan.
 
-### 1.2 Irismena
+Hala ere, segurtasun-sistema sendoenak ere huts egin dezake erabiltzaile batek bere pasahitza mezu faltsu bati erantzunez ematen badu, edo gela-ordenagailu batean saioa irekita uzten badu. **Teknologiak babes asko ematen du, baina azken erabakia beti pertsona baten eskuetan dago.**
 
-- **Web aplikazioa (Ikastetxea):** Laravel 12 oinarritutako aplikazioa, ikasleen kudeaketa, ikastaroen katalogoa, matrikulak eta administrazio-panela barne.
-- **Datu-basea:** PostgreSQL (`matriculas` datu-basea, `admin:Admin123` kredentzialak — **LARRIALDI GORRIA**).
-- **Garapen ingurunea:** Windows garatzaile-makinak, `.env` fitxategia lokalean.
-- **Biltegi-kodea:** GitHub biltegi pribatua (edo publikoa).
-- **Datuak:** ikasleen izen-abizenak eta emailak, matrikulak, notak eta administrazio-kredentzialak.
+Kontzientziazio Plan honen helburua da Ikastetxeako komunitate digitalean zibersegurtasunaren kultura sustatzea: arriskuak garaiz identifikatzea, jardun seguruak ohitura bihurtzea eta gorabeherak beldurrik gabe jakinaraztea.
 
-### 1.3 Lotutako dokumentuak
+### 1.2. Esparru Arautzailea
 
-- Proiektuaren biltegia: `web/` karpeta.
-- Laravel egitura: `app/Http/`, `config/`, `routes/`, `database/`.
-- Test fitxategiak: `tests/Feature/`.
+Plan hau ondorengo arau eta estandarretan oinarritzen da:
 
----
+- **DBEO (EB 2016/679):** Datu pertsonalen osotasuna, konfidentzialtasuna eta erabilgarritasuna bermatzeko erregelamendua.
+- **3/2018 Lege Organikoa (LOPDGDD):** Datu Pertsonalak Babesteko eta Eskubide Digitalak Bermatzeko legea.
+- **ENS – Segurtasun Eskema Nazionala (RD 311/2022):** Hezkuntza-zerbitzuetan informazioaren segurtasuna bermatzeko printzipio eta neurriak.
+- **OWASP Top 10 (2021):** Web aplikazioen arrisku ohikoenak saihesteko erreferentzia teknikoa.
+- **INCIBE eta Cyberzaintza:** Hezkuntza-inguruneetarako jardunbide egokiak eta kontzientziazio-baliabideak.
 
-## 2. Ingurunearen deskribapena
+### 1.3. Planaren Helburu Nagusiak
 
-### 2.1 Aplikazioa eta bere zerbitzuak
-
-Ikastetxearen web aplikazioak ikastetxearen kudeaketa-sistema ematen du. Hauek dira eskaintzen dituen zerbitzuak:
-
-- **Web publikoa (`/index.php`):** ikastaroaren katalogoa eta ikasleentzako matrikula-aukera.
-- **Saioa hastea (`/login.php`):** admin eta ikasleak sartzen dira sistema barrura.
-- **Ikaslearen erregistroa (`/erregistratu.php`):** adminak aurrez gehitutako ikasleak bere kontua aktibatzen du.
-- **Administrazio-panela (`/administrazioa.php`):** ikasleak gehitu/ezabatu, matrikulak kudeatu, estatistikak ikusi.
-- **Matrikula-kudeaketa (`/matrikulak/{id}`):** adminak matrikulen egoera aldatu dezake.
-
-### 2.2 Arkitektura teknikoa
-
-| Osagaia | Xehetasuna |
-|---|---|
-| **Frameworka** | Laravel 12 (`laravel/framework: ^12.0`) |
-| **PHP bertsioa** | ^8.2 |
-| **Datu-basea** | PostgreSQL (`pgsql`) — `matriculas` datu-basea, `127.0.0.1:5432` |
-| **Sesioak** | Datu-basean gordeta (`SESSION_DRIVER=database`) |
-| **Cache** | Datu-basean gordeta (`CACHE_STORE=database`) |
-| **Posta** | Log-era bakarrik (`MAIL_MAILER=log`) — **Produkzioan konfiguratzeke** |
-| **Autentifikazioa** | Eloquent + Sessio — `Erabiltzailea` modeloa |
-| **Baimena** | `AdminOnly` middleware — rol-oinarritutako sarbidea |
-| **Iturburu-kodea** | GitHub biltegi (publikoa edo pribatua) |
-| **APP_ENV** | `local` — **produkzioan aldatzeke** |
-| **APP_DEBUG** | `true` — **produkzioan EZKUTU egin behar da** |
-
-### 2.3 Datu-basearen egitura
-
-```
-rolak            → id_rola, rola_izena (admin / ikasleak), deskribapena
-erabiltzaileak   → id_erabiltzailea, izena, abizenak, emaila, pasahitza (nullable), id_rola, aktibo
-ikastaroak       → id_ikastaroa, izenburua, deskribapena, edukiera (max=30), hasiera_data, amaiera_data
-matrikulak       → id_matrikula, id_erabiltzailea, id_ikastaroa, matrikula_data, egoera (aktibo/ez_aktibo)
-sessions         → id, user_id, ip_address, user_agent, payload, last_activity
-cache / jobs     → Laravel-en estandar taulak
-```
+- **Ezagutza handitzea:** Komunitate osoaren kide bakoitzak — ikasleek, administratzaileek eta garatzaileek — bere jardunak dakartzan arrisku digitalak ulertzea.
+- **Ohitura seguruak errotzea:** Pasahitzen erabilera egokia, saio-itxiera arduratsua eta komunikazio-kanal instituzionalak erabiltzea eguneroko praktiketara txertatuz.
+- **Gizarte-ingeniaritzaren aurrean erresistentea izatea:** Phishing mezuak, esteka susmagarriak eta identitate faltsutzeak azkar identifikatzeko gaitasuna garatzea.
+- **Jakinarazpen-kultura sustatzea:** Edozein anomalia edo akats segurtasun-arduradunari beldurrik gabe jakinarazteko kultura ez-zigortzaile bat eraikitzea.
 
 ---
 
-## 3. Aktiboen inbentarioa
+## 2. Testuinguru Orokorra
 
-> **Kritikotasuna:** Altua = galtzeak edo filtratzeak zerbitzua geldiarazten badu edo datu pertsonalak agerian uzten baditu; Ertaina = arazoak sortzen baditu baina daturik galdu gabe berreskuratzen bada.
+### 2.1. Plataformaren Deskribapena
 
-| Aktiboa | Zer duen edo zer egiten duen | Kritikotasuna | Arduraduna |
-|---|---|---|---|
-| **PostgreSQL datu-basea** | Erabiltzaile guztiak, matrikulak eta ikastaroak | Altua | Sistema-adm. |
-| **`.env` fitxategia** | `APP_KEY`, DB pasahitza (`Admin123`), posta kredentzialak | **KRITIKOA** | Sistema-adm. |
-| **`APP_KEY`** | Sesio eta datu zifratuak deszifratzeko gakoa | Altua | Sistema-adm. |
-| **Administratzaile-kontua** | Ikasle, ikastaro eta matrikula guztietarako sarbidea | Altua | Segurtasun-ard. |
-| **Ikasleen datu pertsonalak** | Izenak, emailak, matrikula-egoera | Altua | Datuak babesteko ard. |
-| **GitHub biltegi-kodea** | Aplikazioaren iturburu-kode osoa | Ertaina | Garapen-ard. |
-| **Garatzaileen makinak** | `.env` eta kodea daukaten Windows eramangarriak | Ertaina | Kide bakoitza |
-| **TLS ziurtagiria (produkzioan)** | Webguneko trafikoa zifratzeko | Ertaina | Sistema-adm. |
+Ikastetxearen kudeaketa-plataformak ikastetxeko bizitza digital osoa biltzen du. Hiru eremu nagusi ditu:
 
----
+- **Eremu Publikoa (`/index.php`):** Ikastaroen katalogoa ikusteko, matrikulazioa eskatzeko eta informazio instituzionala kontsultatzeko eremurik irekiena. Ez da autentifikazio beharrik, baina edozein erabiltzaile sar daiteke.
+- **Ikasleen Eremua:** Emailaren bidezko kontu-aktibazioa (administratzaileak aurretik onartu ondoren), ikastaroetan matrikulatzea, norbere profilera sartzea eta matrikula-historia ikustea. `ikasleak` rolak mugatzen du sarbidea.
+- **Administrazio-panela (`/administrazioa.php`):** Ikasleen alta, baja eta datuak kudeatzeko, ikastaroen edukiera eta matrikulak kontrolatzeko eta sistemaren estatistikak ikusteko gunea. `admin` rolak soilik du sarbidea, `AdminOnly` middleware-aren bidez.
 
-## 4. Arriskuen analisia
+### 2.2. Babestu Beharreko Informazio-Aktiboak
 
-### 4.1 Nola kalkulatzen den
+Plataformak aktibo digital garrantzitsuak kudeatzen ditu:
 
-Mehatxu bakoitzari probabilitate **(P)** eta inpaktu **(I)** bat ematen zaizkio, 1etik 3ra:
+- **Datu pertsonal identifikagarriak:** Ikasleen izen-abizenak, helbide elektronikoak eta kontu-egoera.
+- **Datu akademikoak:** Ikastaroetan matrikulazioak, matrikula-datak eta egoera (aktibo / ez_aktibo).
+- **Autentifikazio-kredentzialak:** Datu-basean gordetako pasahitz-hash-ak (bcrypt), saio-tokenak eta saioa hasteko formularioko datuak.
+- **Azpiegitura-konfigurazioa:** `.env` fitxategia (`APP_KEY`, `DB_PASSWORD`), PostgreSQL datu-basea eta aplikazioaren erregistroak.
+- **Administrazio-sarbidea:** `admin` kontua, ikasle, ikastaro eta matrikula guztietarako sarbide osoa duena.
 
-- **Maila = P × I**
-- **Baxua:** 1–2 | **Ertaina:** 3–4 | **Altua:** 6–9
+### 2.3. Xede-Taldeak eta Eragileen Profilak
 
-**Egoera:** `Arindua` (konponduta eta egiaztatuta) · `Partziala` (neurriak daude, baina zerbait falta da) · `Egiteke`
+Kontzientziazio-jarduerak hiru talderi zuzenduta daude, bakoitzak arriskuak eta erantzukizun desberdinak baititu:
 
-### 4.2 Identifikatutako arriskuak
-
-| # | Mehatxua | Aktiboa / Jatorria | P | I | Maila | Egoera |
-|---|---|---|---|---|---|---|
-| **R1** | **`.env`-ko pasahitza agerian: `DB_PASSWORD=Admin123` testu garbitan** | `.env` fitxategia | 3 | 3 | **9 · Larria** | **Egiteke** |
-| **R2** | **`APP_DEBUG=true` produkzioan: stack trace-ak agerian** | `.env` / `config/app.php` | 3 | 3 | **9 · Larria** | **Egiteke** |
-| **R3** | **`APP_ENV=local` produkzioan: garapen-portaera produkzioan** | `.env` | 3 | 3 | **9 · Larria** | **Egiteke** |
-| **R4** | **`SESSION_ENCRYPT=false`: saio-datuak zifratu gabe** | `.env` / `config/session.php` | 2 | 3 | **6 · Altua** | **Egiteke** |
-| **R5** | **Pasahitz-gutxieneko luzera 8 karaktere bakarrik (erregistroan)** | `IkastaroController` | 2 | 2 | **4 · Ertaina** | **Egiteke** |
-| **R6** | **Admin-seeder-ak pasahitz estatiko bat du: `Admin123`** | `AdminSeeder.php` | 3 | 3 | **9 · Larria** | **Egiteke** |
-| **R7** | **`SESSION_SECURE_COOKIE` ez dago ezarrita HTTPS betearazteko** | `config/session.php` | 2 | 3 | **6 · Altua** | **Egiteke** |
-| **R8** | **`MAIL_MAILER=log`: posta produkzioan ez da bidaltzen** | `.env` | 2 | 2 | **4 · Ertaina** | **Egiteke** |
-| **R9** | **Administrazio-bistan rol-IDa agerian (`id_rola`)** | `administrazioa.php` (89. lerroa) | 1 | 2 | **2 · Baxua** | **Egiteke** |
-| **R10** | **Rate limiting erregistroan IP soilik: proxy baten atzean saihesten da** | `IkastaroController` (60. lerroa) | 2 | 2 | **4 · Ertaina** | **Partziala** |
-| **R11** | **CSRF babesa bai, baina `SameSite=lax` (ez `strict`)** | `config/session.php` | 1 | 2 | **2 · Baxua** | **Partziala** |
-| **R12** | **Indar gordineko erasoa saio-hasieraren aurka** | `AdministrazioaController` | 2 | 2 | **4 · Ertaina** | **Arindua** |
-| **R13** | **SQL injekzioa** | Kontroladoreak | 1 | 3 | **3 · Ertaina** | **Arindua** |
-| **R14** | **XSS erasoa bistetan** | Blade/PHP bistetan | 1 | 3 | **3 · Ertaina** | **Arindua** |
-| **R15** | **DBEO: ikasleen datu pertsonalen babes-politika ez dago definituta** | Aplikazioa | 2 | 3 | **6 · Altua** | **Egiteke** |
-| **R16** | **Segurtasun-kopia estrategiarik ez** | Datu-basea | 2 | 3 | **6 · Altua** | **Egiteke** |
-| **R17** | **Auditoria-erregistrorik ez administrazio-ekintzetan** | Administrazio-panela | 2 | 2 | **4 · Ertaina** | **Egiteke** |
-| **R18** | **Ikaslearen ezabaketan datuak erabat ezabatzen dira (ez anonimizatzen)** | `AdministrazioaController` | 1 | 2 | **2 · Baxua** | **Partziala** |
-
-> [!CAUTION]
-> **R1, R2, R3 eta R6 arrisku kritikoak dira**: `APP_DEBUG=true` produkzioan eta `Admin123` pasahitz estatikoa berehalako konponketa eskatzen dute.
-
----
-
-## 5. Ezarritako prebentzio-neurriak
-
-Neurri hauek kode-azterketan egiaztatu dira.
-
-### 5.1 Autentifikazioa eta baimena
-
-| Neurria | Arriskuak | Egoera | Kokapena |
-|---|---|---|---|
-| Rate limiting saio-hasieran: 5 saiakera, 60 segundoko blokeo | R12 | ✅ Ezarrita | `AdministrazioaController::authenticate()` |
-| Rate limiting erregistroan: 10 saiakera, 60 segundoko blokeo | R10 | ⚠️ Partziala | `IkastaroController::storeRegistration()` |
-| Admin rol-egiaztapena middleware bidez | R13 | ✅ Ezarrita | `AdminOnly.php` |
-| Saioa ixterakoan saio-token berregintza | R12 | ✅ Ezarrita | `AdministrazioaController::logout()` |
-| Ikasle aurrez onartutakoak bakarrik erregistra daitezke | R13 | ✅ Ezarrita | `IkastaroController::storeRegistration()` |
-| Admin-kontua bere buruari ezabatu ezin | R13 | ✅ Ezarrita | `AdministrazioaController::destroy()` |
-| Erabiltzaile inaktiboak ezin du saioa hasi | R12 | ✅ Ezarrita | `authenticate()` - `aktibo: true` baldintza |
-
-### 5.2 Datu-baliozkotzea eta injekzioen babesa
-
-| Neurria | Arriskuak | Egoera | Kokapena |
-|---|---|---|---|
-| Laravel Eloquent ORM: SQL injekzioaren aurka | R13 | ✅ Ezarrita | Kontroladore guztiak |
-| `e()` funtzioa bistan: XSS-aren aurka | R14 | ✅ Ezarrita | PHP bista guztietan |
-| CSRF tokena inprimaki guztietan | R11 | ✅ Ezarrita | Bista guztietan |
-| `max:255` muga eremu guztietan | R13 | ✅ Ezarrita | Baliozkotzeak |
-| Emailaren normalizazioa (`mb_strtolower + trim`) | R13 | ✅ Ezarrita | Kontroladoreak |
-| Edukiera-muga transaksio bidez (SQLite → PostgreSQL ere) | R13 | ✅ Ezarrita | `IkastaroController::enroll()` |
-| Matrikula-egoera `in:aktibo,ez_aktibo` bakarrik onartzen | R13 | ✅ Ezarrita | `MatrikulaController::update()` |
-
-### 5.3 Sesioak eta cookieak
-
-| Neurria | Arriskuak | Egoera | Kokapena |
-|---|---|---|---|
-| `HttpOnly` cookieak (JavaScript-etik irisgoezin) | R14 | ✅ Ezarrita | `config/session.php` |
-| `SameSite=lax` (CSRF babesa) | R11 | ⚠️ Partziala | `config/session.php` — `strict` hobea litzateke |
-| Datu-basean gordetako sesioak | R12 | ✅ Ezarrita | `config/session.php` |
-| `Cache-Control: no-store, private` administrazio-bistan | R12 | ✅ Ezarrita | `AdministrazioaController::index()` |
-| Saio berregintza saioa hastean | R12 | ✅ Ezarrita | `authenticate()` |
-
-### 5.4 Test automatikoak
-
-| Neurria | Arriskuak | Egoera | Kokapena |
-|---|---|---|---|
-| 6 test-fitxategi, hainbat eszenatoki estaltzen | R12–R14 | ✅ Ezarrita | `tests/Feature/` |
-| Erregistro-saiakeraren baliozkotzea testean | R10 | ✅ Ezarrita | `IkastetxeaTest.php` |
-| Edukiera-muga testean egiaztatuta | R12 | ✅ Ezarrita | `CourseCapacityTest.php` |
-| Admin-sarbidearen babesa testean | R12, R13 | ✅ Ezarrita | `AdministrazioaTest.php` |
-
----
-
-## 6. Ekintza-plana
-
-> [!IMPORTANT]
-> Falta diren neurriak, lehentasunaren arabera ordenatuta. **Berehala** = gaur bertan konpondu.
-
-| # | Neurria | Arriskuak | Lehentasuna | Arduraduna | Epea |
-|---|---|---|---|---|---|
-| **A1** | **`APP_DEBUG=false` ezarri produkzioan** | R2 | 🔴 Larria | Sistema-adm. | **Berehala** |
-| **A2** | **`APP_ENV=production` ezarri produkzioan** | R3 | 🔴 Larria | Sistema-adm. | **Berehala** |
-| **A3** | **`DB_PASSWORD` pasahitza aldatu (`Admin123` ez erabili inoiz)** | R1 | 🔴 Larria | Sistema-adm. | **Berehala** |
-| **A4** | **`AdminSeeder`-eko `Admin123` pasahitz estatikoa ezabatu; `ADMIN_PASSWORD` ingurune-aldagaitik irakurri** | R6 | 🔴 Larria | Garapen-ard. | **Berehala** |
-| **A5** | **`SESSION_ENCRYPT=true` ezarri** | R4 | 🟠 Altua | Sistema-adm. | Aste 1 |
-| **A6** | **`SESSION_SECURE_COOKIE=true` ezarri HTTPS produkzioan** | R7 | 🟠 Altua | Sistema-adm. | Aste 1 |
-| **A7** | **Pasahitzaren gutxieneko luzera 8→12 karakterera handitu erregistroan** | R5 | 🟠 Altua | Garapen-ard. | Aste 1 |
-| **A8** | **Posta-konfigurazioa produkziorako ezarri (SMTP benetakoa)** | R8 | 🟠 Altua | Sistema-adm. | Aste 1 |
-| **A9** | **Administrazio-bistan `id_rola` zutabea kendu** | R9 | 🟡 Ertaina | Garapen-ard. | 2 aste |
-| **A10** | **Rate limiting hobetu: IP + email konbinatuta, 2FA aukera gehitu** | R10 | 🟡 Ertaina | Garapen-ard. | 2 aste |
-| **A11** | **`SameSite=strict` ezarri saio-cookietan** | R11 | 🟡 Ertaina | Garapen-ard. | 2 aste |
-| **A12** | **DBEO betetzeko: pribatutasun-politika eta baldintzak orria sortu** | R15 | 🟡 Ertaina | Garapen-ard. | Hilabete 1 |
-| **A13** | **Segurtasun-kopia estrategia ezarri: eguneko kopia automatikoak** | R16 | 🟠 Altua | Sistema-adm. | 2 aste |
-| **A14** | **Administrazio-ekintzen auditoria-erregistroa gehitu (nor, zer, noiz)** | R17 | 🟡 Ertaina | Garapen-ard. | Hilabete 1 |
-| **A15** | **Composer audit eta npm audit egiaztatu, menpekotasunak eguneratu** | — | 🟡 Ertaina | Garapen-ard. | Hilabete 1 |
-
-### 6.1 A4 ekintza: AdminSeeder segurtasun-adabakia
-
-Egungo kodean `AdminSeeder.php` fitxategian pasahitz estatikoa dago:
-
-```php
-// ORAINGO EGOERA — ARRISKUTSUA
-'pasahitza' => Hash::make('Admin123'),
-```
-
-Konponketa:
-
-```php
-// KONPONDUTA — .env fitxategitik irakurri
-'pasahitza' => Hash::make(env('ADMIN_PASSWORD') 
-    ?? throw new \RuntimeException('ADMIN_PASSWORD ez dago ezarrita .env fitxategian')),
-```
-
-`.env` fitxategian gehitu:
-```
-ADMIN_PASSWORD=Z3rb!tz@ri-Seguruag0-2026
-```
-
-### 6.2 A3 ekintza: Datu-basearen pasahitza aldatu
-
-```sql
--- PostgreSQL-en exekutatu
-ALTER USER admin WITH PASSWORD 'BerriPasahitz@2026!';
-```
-
-`.env` fitxategian eguneratu:
-```
-DB_PASSWORD=BerriPasahitz@2026!
-```
-
----
-
-## 7. Politikak eta jardunbide egokiak
-
-### 7.1 Pasahitzak eta sarbideak
-
-- Gutxienez **12 karaktere**, zerbitzu bakoitzerako desberdinak eta pasahitz-kudeatzaile batean gordeta.
-- Ez dira inoiz kodean idazten, ez `Seeder`-etan eta ez `config/` fitxategietan testu garbitan.
-- Akatsez partekatzen badira (adib. `Admin123` bezala), **egun berean aldatzen dira**.
-- Pertsona bakoitzak bere kontua erabiltzen du, eta behar dituen baimenak bakarrik.
-
-### 7.2 Sekretuak
-
-- `.env` fitxategia **ez da inoiz Git-era igotzen**: `.gitignore`-n egiaztatu (✅ dagoeneko ezarrita).
-- `APP_KEY` ez da inoiz beste nonbaitekin partekatzen; aldaketak larrialdi baten seinale dira.
-- Ingurune bakoitzak (lokala, zerbitzaria) bere `APP_KEY` eta `DB_PASSWORD` ditu.
-- Sekretu bat agerian geratzen bada: **baliogabetu eta ordezkatu**; kodea biltegitik ezabatzea ez da nahikoa.
-
-### 7.3 Garapen segurua
-
-- Aldaketak adar batean egiten dira, eta `main`-era pull request bidez iristen dira.
-- Batu aurretik: `php artisan test` berdean. Hedatu aurretik: kode-berrikuspena.
-- Zuzendutako ahultasun bakoitzak hura egiaztatzen duen test bat du, berriro ager ez dadin.
-- `composer audit` eta `npm audit` erabiliz menpekotasunak berrikusi, gutxienez hilean behin.
-- **Lokalean ez erabili benetako ikasleen daturik.**
-
-### 7.4 Eguneratzeak
-
-- **Laravel eta PHP menpekotasunak:** segurtasun-abisuak berrikusi gutxienez hilean behin (`composer audit`).
-- **PostgreSQL:** eguneratze ofizialak jarraitu.
-- **Node.js menpekotasunak:** `npm audit` hilean behin.
-
-### 7.5 Lan-ekipoak
-
-- Windows eguneratuta, Microsoft Defender aktibo.
-- Ez ireki ustekabeko eranskinik edo estekarik; egiaztatu benetako igorlea.
-- Email susmagarri oro segurtasun-arduradunari jakinarazten zaio.
-
-### 7.6 Datuen babesa (DBEO eta LOPDGDD)
-
-- Matrikulatzeko beharrezkoak diren datuak bakarrik eskatzen dira (**minimizazioa**): izena, abizenak, emaila.
-- Administratzaileek bakarrik ikusten dituzte datu pertsonalak.
-- Pribatutasun-politika eta baldintzak webgunean argitaratu behar dira (DBEO betetzeko — **A12 ekintza**).
-- Datu pertsonalen segurtasun-urraketa bat **AEPDri jakinarazten zaio, gehienez 72 orduko epean**, eta, arriskua altua bada, eragindakoei ere bai.
-
----
-
-## 8. Segurtasun-kopiak eta berreskuratzea
-
-| Alderdia | Balioa / Egoera |
-|---|---|
-| **Zer kopiatzen den** | PostgreSQL `matriculas` datu-basea (pg_dump) eta `.env` fitxategia |
-| **Noiz** | **Egunero 03:00etan** (automatikoki — ezartzeke, ikus A13) |
-| **Non** | Zerbitzariko `/var/backups/ikastetxea` + kanpoko kopia (3-2-1 araua) |
-| **Zenbat denboraz** | 30 egun |
-| **Galera maximoa (RPO)** | 24 orduko datuak |
-| **Berreskuratze-denbora (RTO)** | Helburua: ordubete baino gutxiago |
-
-> [!WARNING]
-> Oraingoz ez dago kopia-estrategiarik ezarrita. **A13 ekintza** lehentasunez gauzatu behar da.
-
-### 8.1 PostgreSQL kopia-komandoak
-
-```bash
-# Kopia egitea
-pg_dump -U admin -h 127.0.0.1 -p 5432 matriculas \
-  | gzip > /var/backups/ikastetxea/matriculas-$(date +%Y%m%d).sql.gz
-
-# Kopia leheneratzea
-gunzip -c /var/backups/ikastetxea/matriculas-DATA.sql.gz \
-  | psql -U admin -h 127.0.0.1 -p 5432 matriculas
-```
-
-### 8.2 Leheneratze-prozedura
-
-1. Aplikazioa mantenantze-moduan jarri: `php artisan down`.
-2. Kopia egokia aukeratu: `ls -lh /var/backups/ikastetxea`.
-3. Datu-basea leheneratu (ikus goiko komandoa).
-4. Aplikazioa berrabiarazi: `php artisan up`.
-5. Egiaztatu webgunea kargatzen dela eta saioa has daitekeela.
-
----
-
-## 9. Gorabeheren kudeaketa
-
-### 9.1 Zer den gorabehera bat
-
-Webgunearen edo datuen **konfidentzialtasuna, osotasuna edo erabilgarritasuna** arriskuan jartzen duen edozein gertaera. Adibidez:
-- Webgunea erorita edo aldatuta.
-- Inork ezagutzen ez duen sarbide bat ikasteko edo administratzeko.
-- `.env` fitxategia, `APP_KEY` edo pasahitzak agerian.
-- Filtratutako ikasleen datu pertsonalak.
-- `Admin123` bezalako pasahitz ezaguna erabilita sartzeko saiakera.
-
-### 9.2 Zer egin, urratsez urrats
-
-| Fasea | Ekintzak |
-|---|---|
-| **1. Detektatu** | Segurtasun-arduradunari berehala abisatu. Ordua eta ikusitakoa idatzi. Laravel logak berrikusi (`storage/logs/`). |
-| **2. Eutsi** | Datuak arriskuan badaude, webgunea lineatik kendu. Eragindako pasahitzak aldatu (`APP_KEY` barne). Datu-basearen berehalako kopia bat egin. |
-| **3. Desagerrarazi** | Kausa aurkitu (ahultasuna, pasahitza, akatsa), zuzendu eta hura detektatuko duen test bat gehitu. |
-| **4. Berreskuratu** | Aplikazioa berrabiarazi, behar izanez gero azken kopia ona leheneratu eta test osoa berriz pasatu. |
-| **5. Ikasi** | Txostena 5 egunean: zer gertatu zen, nola detektatu zen, zer egin zen eta zer aldatzen den plan honetan. |
-
-### 9.3 Kontaktuak
-
-| Nor | Noiz eta nola |
-|---|---|
-| Segurtasun-arduraduna | Lehen abisua, edozein gorabeheraren aurrean |
-| Sistema-administratzailea | Zerbitzaria eta datu-basea |
-| INCIBE (laguntza-lerroa) | **017** telefonoa, doakoa eta konfidentziala |
-| INCIBE-CERT | incidencias@incibe-cert.es — enpresen gorabeherak jakinarazteko |
-| AEPD | Egoitza elektronikoa (sedeagpd.gob.es) — datu-urraketak, 72 ordu baino lehen |
-
-### 9.4 Gorabeheren erregistroa
-
-Gorabehera bakoitzean hau idazten da: data eta ordua, nork detektatu zuen, deskribapena, eragindako aktiboak eta datuak, egindako ekintzak, AEPDri jakinarazi zitzaion ala ez, kausa eta berriro gerta ez dadin hartutako neurriak.
-
----
-
-## 10. Prestakuntza eta sentsibilizazioa
-
-- **Taldean sartzean:** plan hau eta 7. ataleko politikak irakurtzea.
-- **Hiruhileko bakoitzean:** saio labur bat phishingari, pasahitzei eta segurtasun-berritasunei buruz.
-- **Seihileko bakoitzean:** gorabehera-simulakro bat (adibidez, *«adminaren pasahitza agerian geratu da GitHub-en»*), 9. atalari jarraituz.
-- **Gorabehera bakoitzaren ondoren:** ikasitakoa talde osoarekin partekatzen da.
-
----
-
-## 11. Mantentze-egutegia
-
-| Maiztasuna | Zeregina | Arduraduna |
+| Taldea | Plataformako Rola eta Baimenak | Arrisku Nagusiak |
 |---|---|---|
-| **Egunero (automatikoa)** | Datu-basearen kopia eta log-en errotazioa | Zerbitzaria |
-| **Astero** | Egiaztatu datu-basea martxan dagoela, eguneko kopia badagoela, diskoko lekua | Sistema-adm. |
-| **Hilero** | `composer audit`, `npm audit`; menpekotasunak eguneratu; segurtasun-testak (`php artisan test`); erabiltzaileak eta sarbideak berrikusi | Sistema-adm. / Garapen-ard. |
-| **Hiruhilero** | Leheneratze-proba; ekintza-plana berrikusi; taldearen prestakuntza | Segurtasun-ard. |
-| **Seihilero** | Gorabehera-simulakroa; sarbide-arauak berrikusi | Segurtasun-ard. |
-| **Urtero** | Planaren berrikuspen osoa eta kanpoko auditoria | Segurtasun-ard. |
+| **Administratzaileak** | Administrazio-panel osora sarbidea (`/administrazioa.php`), ikasle-datuak kudeatu, matrikulak onartu, ikasleak gehitu eta ezabatu. | Kredentzial-lapurreta, phishing bidezko manipulazioa, pasahitz ahulak, saio irekiak partekatutako gailutan. |
+| **Ikasleak** | Profil pertsonala, matrikulazioa ikastaroetan (`/erregistratu.php`), norbere matrikula-historia. | Gelako ordenagailuetan saioa irekita uztea, pasahitz berrerabilia, aktibazio-esteka faltsuak sakatzea. |
+| **Garatzaileak eta mantentze-taldea** | Kode-basea, datu-basea, `.env` fitxategia, hedapena eta segurtasun-adabakiak. | `.env` sekretuak kode-biltegira igotzea, konfigurazio-akatsa produkzioan (`APP_DEBUG=true`), menpekotasun zaharkituak. |
+
+### 2.4. Identifikatutako Mehatxu Nagusiak
+
+Plataformaren egitura eta erabilera-ohiturei erreparatuta, ondorengo mehatxuak dira garrantzitsuenak:
+
+- **Phishing-a eta identitate-ordezkapenа:** Ikastetxearen izenean bidalitako aktibazio-mezu faltsuak erabiltzaile-kredentzialak eskuratzeko. Ikasleek aktibazio-emailak jasotzen dituztenez, eraso-bide hau bereziki eraginkorra da.
+- **Pasahitz ahulak eta sekretu estatikoak:** Sistemaren hasierako konfigurazio-unean `Admin123` bezalako pasahitz arruntak erabiltzea, inoiz aldatzen ez direnak.
+- **Saioak ireki uzteа gailu partekatuetan:** Ikasgeletan edo administrazio-guneetan saioa zabalik uztea bertara sartu daitekeen edozeinen eskuetan uztea da ikasle-datuak.
+- **Konfigurazio-akatsa hedatzean:** `APP_DEBUG=true` edo `APP_ENV=local` aldagaiak produkzio-ingurunera iristea, barne-informazioa agerian utz dezakeena.
+- **Datu pertsonalen zirkulazio kontrolgabea:** Ikasleen zerrendak edo emailak baimenik gabeko kanaletara (txat-taldeak, posta pertsonala) eramateko tentazioa.
+
+### 2.5. Babes Teknikoaren eta Giza Faktorearen Arteko Oreka
+
+Plataformak dagoeneko hainbat babes-geruza ditu ezarrita, kode-azterketan egiaztatuak:
+
+- **Sarbide-kontrola:** `AdminOnly` middleware-ak `admin` rola egiaztatzen du administrazio-bisterarako sarbide bakoitzean, ez soilik saioa hastean.
+- **Indar gordineko erasoen aurkako babesa:** `RateLimiter` bidez, 5 saiakera oker eta gero sarrera blokeatzen da automatikoki 60 segundoz (`AdministrazioaController`).
+- **Injekzio-erasoen babesa:** Eloquent ORM-ek SQL injekzioak saihesten ditu, eta `e()` funtzioa ikuspegietan XSS-en aurka erabiltzen da.
+- **CSRF babesa:** Token berezia formulario guztietan, kanpotik eraso bidezko eskaera faltsuak ekiditeko.
+- **Kontu-aktibazioa:** Ikasleek ezin dute konturik sortu libreki; administratzaileak aurretik onartu behar ditu.
+
+**Ondorioa:** Babes tekniko hauek guztiak alferrikakoak bihurtzen dira administratzaile batek kredentzialak mezu faltsu bati ematen badizkie, edo garatzaile batek `DB_PASSWORD=Admin123` kode-biltegira igotzen badu. **Kontzientziazio Plana ez da osagarri hautazkoa — segurtasun-katearen ezinbesteko esteka da.**
 
 ---
 
-## 12. Adierazleak
+## 3. Lan-ildoak
+
+Jarraian sei lan-ildo aurkezten dira, bakoitza hiru ikuspegitik landuta:
+- **Kontzientziazioa:** Komunitatea sentsibilizatzeko jarduerak.
+- **Teknikoa:** Arlo hori hobetzeko neurri tekniko espezifikoak.
+- **Prozedurala:** Arauak, protokoloak eta eginbeharrak.
+
+Lan-ildo hauek 1.3 ataleko helburuekin eta 2.4 ataleko mehatxuekin zuzenean lotuta daude.
+
+---
+
+### 3.1. Lan-ildoa: Phishing-a eta Gizarte-Ingeniaritza
+
+**Xede-taldeak:** Administratzaileak, ikasleak.
+
+#### Kontzientziazioa
+
+- **Tailerra ikasturte hasieran** (60 min): Phishing-aren mekanismoa eta ondorioak azaltzea adibide errealekin. Ikastetxearen aktibazio-emaila imita dezakeen mezu faltsu baten azterketa bisuala egitea taldean: zer seinalek salatzen dute eranskin edo esteka bat?
+- **Simulazio kontrolatuak hiruhilero:** Administrazio-taldeari phishing mezu simulatu bat bidali, ondoren tasa neurtu (nork sakatu duen, nork jakinarazi duen) eta emaitzak taldean komentatzeа zigorrik gabe.
+- **Poster eta txartel ikusgarriak:** Administrazio-eremuan eta ikasgeletan jartzea: *«Ikastetxeak ez dizu inoiz pasahitzik eskatuko emailez»* mezuarekin.
+
+#### Teknikoa
+
+- Posta-domeinuan **SPF, DKIM eta DMARC** konfiguratzea: Ikastetxearen izenean bidalitako mezu faltsuak zailtzeko.
+- Plataformako emailetan (aktibazio-mezuak) mezu argi bat gehitzea: *«Esteka hau ikastetxearen domeinu ofizialetik dator. Ez sartu zure pasahitza galdetu diezaizun inori»*.
+- Administrazio-panelean **alerta-banner bat** jartzea phishingaren aurkako oinarrizko gomendioekin.
+
+#### Prozedurala
+
+- **Arau nagusia:** Mezu susmagarria jaso, ez sakatu, ez erantzun — **segurtasun-arduradunari birbidali** (helbide bakar eta ofiziala).
+- Administratzaileek datu-eskaera edo sarbide-eskaera guzti-guztiak **bigarren kanal batetik egiaztatu** (telefonoa edo aurrez aurrekoa) emailez iristen badira ere.
+- Simulazioen emaitzak bildu eta taldeen arabera segmentatu: maila baxuenean diren kolektiboak prestakuntza berezia jaso.
+
+---
+
+### 3.2. Lan-ildoa: Pasahitzak eta Kontu-Segurtasuna
+
+**Xede-taldeak:** Administratzaileak, ikasleak, garatzaileak.
+
+#### Kontzientziazioa
+
+- **Gida praktikoa** pasahitz-politikari buruz: gutxienez 12 karaktere, zerbitzu bakoitzeko desberdina, pasahitz-esaldiak erabiltzea (adib. `Kaixo!Eibar2026#`) eta zergatik huts egiten duten ohiko ordezketak (`a→@`, `e→3`).
+- **Pasahitz-kudeatzaileen aurkezpena**: Bitwarden edo KeePassXC erakustea taldean, saio bat erabiltzea instalazioa eta erabilera ikasiz.
+- **Argi utzi kodearen arrisku bat:** `Admin123` bezalako pasahitzak ez dira soilik ahulak — *sistema barruan idatzita uzten badira (Seeder-etan edo konfigurazio-fitxategietan), aurkitzea oso erraza da.*
+
+#### Teknikoa
+
+- Plataforman erregistratzerakoan pasahitzaren gutxieneko luzera **12 karakterera** handitzea (oraingoz 8 dira `IkastaroController`-en).
+- **Administrazio-kontuentzat bigarren faktore autentifikazioa (2FA/TOTP)** derrigorrezko bihurtzea `/administrazioa.php`-ra sartzeko.
+- `AdminSeeder.php`-n pasahitz estatikoa (`Admin123`) **ingurune-aldagaira eramatea** (`ADMIN_PASSWORD` `.env` fitxategian), inoiz kode-biltegira ez igotzeko.
+- Blokeo-gertaerak (rate limiting aktibatzea) erregistratzea eta alerta bidali sistemak automatikoki.
+
+#### Prozedurala
+
+- **Kontu partekatuak erabat debekatzea**: Pertsona bakoitzak bere kredentzialak ditu. Norbaitek taldea uzten badu, sarbideak berehala baliogabetzen dira.
+- Pasahitza konpromititu dela susmatzen bada: **24 orduko epean** aldatu eta segurtasun-arduradunari jakinarazi.
+- Administratzaileen kontuen urteko berrikuspena: kontu aktiboak, azken sarbide-data eta rol-egokitasuna.
+
+---
+
+### 3.3. Lan-ildoa: Saioen Kudeaketa eta Gailu Partekatuak
+
+**Xede-taldeak:** Ikasleak, administratzaileak.
+
+#### Kontzientziazioa
+
+- **Komunikazio ikusgarria ikasgeletan:** Pantailaren aurrean ohar iraunkorrak: *«Amaitu duzunean, itxi saioa. Ezker goiko izkinan daukazu»*, Ikastetxeako plataformako irten-botoiaren argazkiarekin.
+- **Eztabaida gidatua ikaslekin:** «Zer gerta daiteke zure saioa zabalik uzten baduzu?» galdera erabiliz, ondorio praktikoak taldean aztertzea: norbaitek zure izenpean matrikula egin dezake, edo zure datuak ikusi.
+- **Lan-ekipoen erabilera-arauak** — administrazio-langileentzat: pantaila blokeatzea mahaigaintik alde egitean (`Win+L`), nabigatzaileko saio gordeak ez erabiltzea.
+
+#### Teknikoa
+
+- Saioaren iraungitze automatikoa inaktibitatean: **20 minutu administratzaileentzat**, **45 minutu ikasleeentzat** (`SESSION_LIFETIME` aldagaia `.env` fitxategian).
+- `SESSION_ENCRYPT=true` ezartzea: Saio-datuak datu-basean zifratuta gordetzea.
+- `SESSION_SECURE_COOKIE=true` ezartzea produkzioan: Cookie-ak HTTPS bidez soilik bidaltzeko.
+- Administrazio-bistan **«Itxi nire beste saio guztiak»** aukera gehitzea, gailua galdu edo konpromititu denean.
+
+#### Prozedurala
+
+- Ikasgelako irakasleek **azken saioaren ondoren** egiaztatu behar dute ordenagailu guztiak itxita daudela: ez saioa soilik, nabigatzaile-leihoa ere bai.
+- Norbaitek besteren saioa irekita topatzen badu: **itxi, ez erabili, eta irakasleari edo administratzaileari jakinarazi berehalakoan**.
+- Administrazio-langileen gailu pertsonaletan plataformara sartzen badira: ez erabili Wi-Fi publiko bat VPN gabe.
+
+---
+
+### 3.4. Lan-ildoa: Datu Pertsonalen Tratamendua eta Pribatutasuna
+
+**Xede-taldeak:** Administratzaileak.
+
+#### Kontzientziazioa
+
+- **Prestakuntza-saio bat DBEO/LOPDGDD-ri buruz** (30-45 min): Zer den datu pertsonala, minimizazio-printzipioa eta ikasleek dituzten eskubideak (atzipena, zuzenketa, ezabaketa, ahanztura-eskubidea).
+- **Kasu praktiko eztabaidagarriak:** «Zein da arazo honen ondorioa?»: ikasle-zerrenda WhatsApp talde batean partekatzea, pantaila-argazkia hartu eta bidaltzea, USB batean kopia egitea etxera eramateko.
+- Administrazio-sarbidea jaso aurretik **konfidentzialtasun-konpromisoa sinatzea**, argi utziz plataforman ikusitakoa ez dela baimenik gabeko kanaletara irteten.
+
+#### Teknikoa
+
+- **Rol eta baimenen printzipio minimoa**: Administratzaile bakoitzak bere lanean behar dituen baimenak soilik izatea — datu guztiak ez dira denontzat.
+- Plataforman ikasleen datu sentikorrak (emailak, izenak) **ez erakustea erabiltzaile publikoei** — dagoeneko administrazio-middlewarek babesten du, baina ikuspegietan ere egiaztatu behar da.
+- Datuak esportatu edo deskargatu direnean **erregistroa uztea**: nork, noiz eta zer deskargatu duen.
+
+#### Prozedurala
+
+- **Arau nagusia:** Ikasle-datuak baimendutako kanal instituzionalak soilik erabiliz partekatu — plataformaren barnean edo posta korporatiboaren bidez, inoiz tresna pertsonaletan.
+- Ikasle batek bere datuen kontsulta, zuzenketa edo ezabatze-eskaera egiten badu, **hilabeteko epean** erantzun behar da (DBEO 12. art.).
+- Datu-urraketa bat detektatzen bada (ikasle-datu bat agerian geratu bada), **72 orduko epean** AEPDri jakinarazi (DBEO 33. art.) eta, arriskua altua bada, eragindakoei ere bai.
+
+---
+
+### 3.5. Lan-ildoa: Gorabeheren Jakinarazpena eta Erantzuna
+
+**Xede-taldeak:** Komunitate osoa.
+
+#### Kontzientziazioa
+
+- **«3 urrats» txartela** ikasgeletan eta administrazio-gunean: *(1) Gelditu eta pantaila-argazkia hartu. (2) Ez ezabatu ezer. (3) Jakinarazi segurtasun-arduradunari*.
+- **Kultura ez-zigortzailea abiapuntua:** Akats bat azkar jakinarazteak ez du zigorrik ekarriko — alderantziz, eskertuko da. Hori argi eta garbi esatea komunikazio ofizialetan.
+- Urtean **simulakro bat administrazio-taldearekin**: adibidez, *«Garatzaileak `.env` fitxategia GitHub-era igo du oharkabean»* eszenatokia, 9. ataleko erantzun-protokoloa praktikan jarriz.
+
+#### Teknikoa
+
+- Laravel-en **erregistro (logs) zentralizatuak** eta alertak konfiguratzea: saioa hasteko saiakera anitz, ordutegi ezohikoak, administrazio-panelera sartzeko saiakera huts.
+- **Jakinarazpenerako kanal bakarra** ezartzea: posta-helbide edo formulario ofizial bat, arduradunak jarraipena egin dezan (egoera, arduraduna, konponketa-data).
+- `.env` sekretuak, `APP_KEY` eta `DB_PASSWORD` aldizka **biratzea** (gutxienez urtean behin, eta berehala susmo kasuetan).
+- **Segurtasun-kopiak** egunero automatikoki egitea eta hilero berreskuratze-proba bat egitea, funtzionatzen duela egiaztatzeko.
+
+#### Prozedurala
+
+- **Erantzun-protokoloa gorabehera baten aurrean:**
+  1. **Detektatu** — Ordua, zer ikusi den eta non idatzi.
+  2. **Eutsi** — Hedapena mugatu: plataforma itzali (`php artisan down`), konpromitutako pasahitzak aldatu.
+  3. **Ikertu** — Logak aztertu, kausa identifikatu, eragina neurtu.
+  4. **Konpondu** — Arazoa zuzendu eta hura detektatuko duen testa gehitu.
+  5. **Berreskuratu** — Plataforma berrabiarazi, azken kopia ona leheneratu behar izanez gero.
+  6. **Ikasi** — Txostena 5 egunean: zer gertatu zen, zergatik, zer aldatzen den.
+- **Larritasun-mailak eta erantzun-epeak:**
+  - *Larria* (kredentzial-lapurreta, datu-urraketa): **1 ordu**
+  - *Ertaina* (plataforma erorita, konfigurazio-akatsa): **4 ordu**
+  - *Baxua* (erabiltzaile-akatsa, log susmagarria): **24 ordu**
+
+---
+
+### 3.6. Lan-ildoa: Garapen Segurua eta Ahultasunen Kudeaketa
+
+**Xede-taldeak:** Garapen- eta mantentze-taldea, administratzaileak.
+
+#### Kontzientziazioa
+
+- **OWASP Top 10 (2021) saio praktikoa garatzaileentzat**: Injekzioak, autentifikazio-akatsak, konfigurazio okerrak — Ikastetxearen plataformako adibide errealak erabiliz (adib. `APP_DEBUG=true` produkzioan zertan den arriskutsua, edo `Admin123` Seeder-ean agertzearen ondorioak).
+- **Kode-berrikuspenetan segurtasun-kontrol-zerrenda erabiltzea**: Inprimaki bat sortzea pull request bakoitzeko `✓ `.env berri bat gehitu al duzu? ✓ APP_DEBUG=false? ✓ composer audit garbia?`.
+- Segurtasun-aurkikuntzak taldean **partekatu eta komentatu** zigorrik gabe, ikasteko aukera gisa.
+
+#### Teknikoa
+
+- **`composer audit`** eta **`npm audit`** integratzea hedapen-prozesuaren parte bezala, automatikoki menpekotasunen ahultasunak detektatzeko.
+- `APP_DEBUG=false` eta `APP_ENV=production` produkzioko `.env` fitxategian **beharrezkoa** da, inoiz garapen-konfigurazioa produkziora irits ez dadin.
+- **`AdminSeeder`-en pasahitz estatikoa** (`Admin123`) ingurune-aldagaira eramatea: `ADMIN_PASSWORD` `.env` fitxategian, inoiz kode-biltegira igo gabe.
+- Kode-biltegi publikoan `.env` fitxategia **inoiz ez agertzea** egiaztatzea: `.gitignore`-an dago (✅ dagoeneko ezarrita), baina `git log` berrikusi `.env` inoiz igo ote den.
+- **Test automatikoak** mantentzea: 6 test-fitxategi daude `tests/Feature/`-n — bertsio garrantzitsu bakoitzaren aurretik exekutatu (`php artisan test`) eta %100ean berdean eduki.
+
+#### Prozedurala
+
+- **Aldaketa-kudeaketa**: Produkziora hedatu aurretik kode-berrikuspena (beste pertsona batek) eta testak berdean.
+- Ahultasun kritiko bat aurkitzen bada (`composer audit` bidez edo kanpotik jakinarazita): **48 orduko epean** konpondu eta adabakia aplikatu.
+- **Urteko segurtasun-auditoria** edo penetrazio-proba bat: kanpoko talde batek sistematikoki aztertzen du plataforma eta emaitzen arabera ekintza-plana eguneratzen da.
+- Garatzaile berri bat taldean sartzen denean: `.env` fitxategiaren eta sekretu-politiken inguruko azalpena eman, konpromiso-dokumentua sinatu.
+
+---
+
+## 4. Jarraipena eta Ebaluazioa
+
+### 4.1. Adierazle Nagusiak
 
 | Adierazlea | Helburua | Nola neurtzen den |
 |---|---|---|
-| Kritikalidade altuko arriskuak (R1–R6) | 0 — **berehalakoan konpondu** | Ekintza-planaren jarraipena |
-| Egiteke dauden segurtasun-adabakiak | Bat ere ez 7 egun baino gehiagoz | `composer audit`, `npm audit` |
-| Segurtasun-kopia zuzena duten egunak | %100 | `ls /var/backups/ikastetxea` |
-| Leheneratze-probak | 1 hiruhileko bakoitzean, ordubete baino gutxiagoan | Probaren erregistroa |
-| Test automatikoak | %100 berdean | `php artisan test` |
-| Pasahitz-politika betetzea | %100 (inork ez du `Admin123` edo berdina erabiltzen) | Hileko berrikuspena |
-| Detekziotik eusteraino igarotako denbora | Ordubete baino gutxiago | Gorabeheren erregistroa |
+| Phishing-simulazioetan sakatze-tasa | <%10 | Simulakro bakoitzaren ondoren |
+| 2FA aktibo administratzaile-kontuetan | %100 | Hileko berrikuspena |
+| Pasahitz-politika betetzen duten kontuak | %100 | Hiruhileko berrikuspena |
+| Jakinarazitako gorabeherak | Igotzen ari bada, ona da (kultura) | Urteko konparaketa |
+| `composer audit` ahultasun kritikoak | 0 | Hedapen bakoitzean |
+| Test automatikoak berdean | %100 | `php artisan test` hedapen aurretik |
+| Segurtasun-kopia egiaztatu den egunak | %100 | Aste bakoitzeko |
+
+### 4.2. Berrikuspena eta Eguneraketa
+
+Plan hau **urtean behin** berrikusten da, edo lehenago:
+
+- Segurtasun-gorabehera garrantzitsu bat gertatu ondoren.
+- Plataforman aldaketa tekniko garrantzitsua egin ondoren.
+- Arau-esparru berriak argitaratu ondoren.
 
 ---
 
-## 13. Rolak eta erantzukizunak
+## 5. Erreferentziak
 
-| Rola | Funtzioak | Pertsona |
-|---|---|---|
-| **Segurtasun-arduraduna** | Plan hau koordinatu eta berrikusten du; gorabeheren aurreko erantzuna eta prestakuntza zuzentzen ditu | [izena] |
-| **Sistema-administratzailea** | Zerbitzaria, datu-basea, eguneratzeak, kopiak eta leheneratzeak | [izena] |
-| **Garapen-arduraduna** | Kodea, pull requesten berrikuspenak, testak, menpekotasunak eta hedapenak | [izena] |
-| **Datuak babesteko arduraduna** | DBEOa betetzea, ikasleen eskubideak eta urraketen jakinarazpena | [izena] |
-| **Talde osoa** | 7. ataleko politikak betetzea eta edozein gorabeheraren berri ematea | Denak |
-
----
-
-## A eranskina. Egiaztapen-komandoak
-
-### Garapen ingurunean (proiektu-karpetatik)
-
-```bash
-# Test guztiak exekutatu
-php artisan test
-
-# Menpekotasunen segurtasun-arazoak egiaztatu
-composer audit
-npm audit
-
-# Konfigurazio-cache garbitu eta egiaztatu
-php artisan config:clear
-php artisan config:cache
-
-# Laravel logak ikusi
-tail -f storage/logs/laravel.log
-
-# Datu-basearen migrazioen egoera
-php artisan migrate:status
-```
-
-### Segurtasun-egiaztapen zuzenak (kodea aztertu)
-
-```bash
-# APP_DEBUG produkzioan false dela egiaztatu
-grep "APP_DEBUG" .env
-
-# APP_ENV produkzioan production dela egiaztatu
-grep "APP_ENV" .env
-
-# .env Git-etik kanpo dagoela egiaztatu
-git check-ignore -v .env
-
-# Pasahitz ahulak bilatu kode-basean
-grep -rn "Admin123\|password.*123\|secret.*123" --include="*.php" .
-```
-
-### Arrisku kritikoen egiaztapen-zerrenda
-
-```
-[ ] APP_DEBUG=false → config/app.php eta .env
-[ ] APP_ENV=production → .env
-[ ] DB_PASSWORD aldatuta (ez Admin123) → .env
-[ ] ADMIN_PASSWORD .env-tik irakurtzen da AdminSeeder-en
-[ ] SESSION_ENCRYPT=true → .env
-[ ] SESSION_SECURE_COOKIE=true → .env (produkzioan HTTPS behar du)
-[ ] php artisan test → dena berdean
-[ ] composer audit → 0 ahultasun kritiko
-[ ] .env ez dago Git-en → git status egiaztatu
-```
+1. **DBEO (EB 2016/679)** — Datuak Babesteko Erregelamendu Orokorra: [eur-lex.europa.eu](https://eur-lex.europa.eu)
+2. **LOPDGDD (3/2018 LO)** — Datu Pertsonalak Babesteko eta Eskubide Digitalak Bermatzeko Lege Organikoa
+3. **ENS (RD 311/2022)** — Segurtasun Eskema Nazionala: [ccn-cert.cni.es](https://www.ccn-cert.cni.es)
+4. **OWASP Top 10 (2021):** [owasp.org/Top10](https://owasp.org/Top10/)
+5. **INCIBE, «Protege tu empresa»:** [incibe.es/empresas](https://www.incibe.es/empresas)
+6. **Cyberzaintza — Zibersegurtasunaren Euskal Agentzia:** [cyberzaintza.eus](https://cyberzaintza.eus)
+7. **AEPD — Agencia Española de Protección de Datos:** [aepd.es](https://www.aepd.es)
+8. **Laravel Segurtasun-dokumentazioa:** [laravel.com/docs/security](https://laravel.com/docs/security)
 
 ---
 
-## B eranskina. Erreferentziak
-
-1. **OWASP Top 10 (2021):** web aplikazioen arrisku ohikoenak — [owasp.org/Top10](https://owasp.org/Top10/)
-2. **CIS Benchmarks, Ubuntu Linux eta Docker-erako:** gotortze-gidak — [cisecurity.org](https://www.cisecurity.org/cis-benchmarks)
-3. **Laravel Segurtasun-dokumentazioa:** [laravel.com/docs/security](https://laravel.com/docs/security)
-4. **INCIBE, «Protege tu empresa»:** enpresentzako zibersegurtasun-gidak eta -tresnak — [incibe.es](https://www.incibe.es/empresas)
-5. **Datuak Babesteko Erregelamendu Orokorra (DBEO, EB 2016/679)** eta **3/2018 Lege Organikoa (LOPDGDD)**
-6. **AEPD (Agencia Española de Protección de Datos):** [aepd.es](https://www.aepd.es)
-7. **Composer Audit:** [getcomposer.org/doc/03-cli.md#audit](https://getcomposer.org/doc/03-cli.md#audit)
-8. **NIST Password Guidelines (SP 800-63B):** pasahitz-politikarako erreferentzia
-
----
-
-*Dokumentu hau 2026ko urriaren 1ean sortua da. Hurrengo berrikuspena: 2027ko urtarrilaren 1a.*
+*Dokumentu hau 2026ko urriaren 1ean sortua da.*
+*Hurrengo berrikuspena: 2027ko urriaren 1a — edo lehenago gorabehera garrantzitsu bat gertatuz gero.*
