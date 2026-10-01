@@ -1,59 +1,147 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Ikastetxea: webgunearen gida
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Ikastetxea webguneak ikastaroak kontsultatzeko eta matrikulak kudeatzeko aukera ematen du. Gida honetan haren helburua, erabilera eta ezaugarri nagusiak azaltzen dira.
 
-## About Laravel
+## 1. Webgunearen helburua
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Webgunearen helburua ikastetxeko ikastaroen informazioa eta izen-ematea toki berean biltzea da. Ikasleek eskaintza ikusi eta interesatzen zaizkien ikastaroetan matrikula egin dezakete. Administratzaileak, berriz, ikasleen altak eta matrikulen egoera kudeatzen ditu.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Hiru erabiltzaile mota bereizten dira:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| Erabiltzailea | Aukerak |
+| --- | --- |
+| Bisitaria | Ikastaroak, datak eta plaza libreak kontsultatzea. |
+| Ikaslea | Kontua aktibatzea, saioa hastea eta ikastaroetan matrikulatzea. |
+| Administratzailea | Ikasleak gehitzea, erabiltzaileak kontsultatzea eta matrikulak kudeatzea. |
 
-## Learning Laravel
+## 2. Webgunea erabiltzeko urratsak
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### Ikastaroak kontsultatzea
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Hasierako orrian ikastaroen eskaintza agertzen da. Ikastaro bakoitzak izena, azalpen laburra, hasiera- eta amaiera-datak eta plaza libreen kopurua erakusten ditu.
 
-## Laravel Sponsors
+Informazio hori saioa hasi gabe ikus daiteke. Matrikulatzeko, ordea, ikasle-kontu aktiboa behar da.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Kontua aktibatzea
 
-### Premium Partners
+Ikaslea erregistratu aurretik, administratzaileak haren izena, abizenak eta helbide elektronikoa gehitu behar ditu.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+1. Sakatu **Erregistratu**.
+2. Idatzi administratzaileari emandako helbide elektronikoa.
+3. Aukeratu gutxienez zortzi karaktereko pasahitza eta errepikatu baieztatzeko.
+4. Sakatu **Kontua aktibatu**.
 
-## Contributing
+Erregistroa osatu ondoren, ikasleak bere kontuarekin saioa has dezake.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Saioa hastea eta matrikulatzea
 
-## Code of Conduct
+1. Sakatu **Saioa hasi** eta sartu helbide elektronikoa eta pasahitza.
+2. Aukeratu interesatzen zaizun ikastaroa.
+3. Plaza libreak badaude, sakatu **Matrikulatu**.
+4. Egiaztatu **Matrikulatuta zaude** mezua agertzen dela.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Ikasle batek hainbat ikastarotan eman dezake izena, baina ikastaro berean behin bakarrik. Ikastaro bakoitzak gehienez 30 plaza ditu.
 
-## Security Vulnerabilities
+**Plazak agortuta** agertzen bada, ezin da matrikula berririk egin. **Matrikula ez dago aktibo** agertzen bada, administratzailearekin harremanetan jarri behar da berraktibatzeko.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Erabilera amaitzean, sakatu **Saioa itxi**.
 
-## License
+### Administrazio-panela erabiltzea
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Administratzaileak saioa hastean kudeaketa-panelera sartzen da. Bertan erabiltzaileen zerrenda, ikasle berriak gehitzeko formularioa, estatistikak eta ikastaroetako matrikulak aurkituko ditu.
+
+Ikasle bat gehitzeko, **Ikaslea gehitu** atalean haren datuak bete behar dira. Ondoren, ikasleak bere kontua aktiba dezake.
+
+Matrikula bat eteteko, dagokion ikastaroan **Desaktibatu** sakatzen da. Horrek plaza bat askatzen du, ikaslearen kontua eta beste matrikulak mantenduz. **Aktibatu** botoiak matrikula berriz gaitzen du, ikaslearen kontua aktibo badago eta plaza libreak badaude.
+
+Estatistikek ikasle kopurua, kontu aktiboak, matrikula aktiboak eta plaza libreak erakusten dituzte. Ikastaro bakoitzaren okupazioa ere ikus daiteke.
+
+## 3. Antolaketa teknikoa eta lan-tresnak
+
+Webgunea Laravel eta PHP erabiliz garatu da. Tresna horiek erabiltzaileen eskaerak, saioak eta matrikulazio-prozesua kudeatzen dituzte. Datuak gordetzeko, proiektuaren hasierako konfigurazioak SQLite erabiltzen du.
+
+Pantailak HTML eta CSS bidez osatzen dira. Proiektuak JavaScript lantzeko tresnak ere prestatuta ditu, nahiz eta egungo funtzio nagusiak formularioen eta orrien kargaren bidez gauzatu.
+
+Aplikazioaren barruan datuen kudeaketa, eragiketen logika eta pantailen aurkezpena bereizita daude. Antolaketa horrek aldaketak egitea eta mantentze-lanak errazten ditu.
+
+## 4. Aplikazioaren oinarrizko funtzionamendua
+
+Aplikazioaren oinarria ikastaroen katalogoa, ikasleen erregistroa, saio-hasiera eta administrazio-panela dira. Atal horiek elkarrekin lotuta daude, ikaslearen altatik matrikularaino prozesu osoa egiteko.
+
+Erabiltzaileak formulario bat bidaltzen duenean, sistemak datuak eta baimenak egiaztatzen ditu. Matrikularen kasuan, plaza libreak dauden ere begiratzen du. Dena zuzena bada, aldaketa gordetzen da eta baieztapena erakusten da; bestela, arazoa azaltzen duen mezua agertzen da.
+
+Webgunea martxan jartzeko, arduradun teknikoak beharrezko tresnak instalatu, ingurunea konfiguratu eta datu-basea prestatu behar ditu. Prest dagoenean, gainerako erabiltzaileek emandako helbidetik sar daitezke.
+
+## 5. Ingurunearen konfigurazioa: .env
+
+`.env` fitxategiak webgunea exekutatzeko ezarpenak gordetzen ditu, hala nola aplikazioaren helbidea, datu-basearen konexioa eta saioen konfigurazioa.
+
+Instalazio bakoitzera egokitzen da, eta `.env.example` fitxategia erabiltzen da oinarri gisa. Informazio sentikorra izan dezakeenez, pribatua mantendu behar da. Eguneroko erabiltzaileek ez dute fitxategi hori aldatu behar; arduradun teknikoaren lana da.
+
+## 6. Datuen antolaketa eta zaintza
+
+Datu-baseak erabiltzaileen, rolen, ikastaroen eta matrikulen informazioa gordetzen du. Informazio hori lotuta dago, ikasle bakoitzaren matrikulak eta ikastaro bakoitzeko parte-hartzaileak ezagutzeko.
+
+Sistemak helbide elektroniko errepikatuak eta ikastaro bereko matrikula bikoiztuak eragozten ditu. Plaza libreak matrikula aktiboen arabera kalkulatzen dira.
+
+Matrikula desaktibatzean, haren informazioa mantentzen da, baina plaza libre geratzen da. Datuak ez galtzeko, arduradunak aldizkako babeskopiak egin behar ditu.
+
+## 7. Diseinua eta erabilera erosoa
+
+Webguneak informazioa argi erakustea du helburu. Ikastaroak txarteletan aurkezten dira, eta administrazioan taulak eta estatistikak erabiltzen dira datuak kontsultatzeko.
+
+Diseinua ordenagailu, tablet eta mugikorretako pantailetara egokitzen da. Botoiek ekintza adierazten dute, eta mezuek eragiketa ondo egin den edo zer zuzendu behar den azaltzen dute.
+
+Animazio txikiek botoiak, ikastaro-txartelak eta gehitu berri den ikaslea nabarmentzen dituzte. Efektu horiek CSS bidez egiten dira, eta mugimendu murriztua nahi duten erabiltzaileen hobespena kontuan hartzen da.
+
+JavaScript erabiltzeko oinarria prestatuta dago, baina egungo pantaila nagusiek ez dute haren beharrik matrikulak edo kontuen kudeaketa egiteko.
+
+## 8. Arrisku nagusiak eta babesa
+
+Webguneak erabiltzaileen datuak eta sarbideak babesteko neurriak ditu. Hala ere, konfigurazio egokia eta mantentzea ere beharrezkoak dira.
+
+| Arriskua | Babesa edo kontuan hartu beharrekoa |
+| --- | --- |
+| Baimenik gabeko sarbidea | Administrazio-eragiketak administratzaileentzat mugatuta daude. |
+| Pasahitzak asmatzeko saiakera errepikatuak | Sistemak saioa hasteko saiakerak mugatzen ditu. |
+| Beste ikasle baten kontua aktibatzea | Aurretiko alta behar da, baina emailaren jabetza egiaztatzeko urratsa gehitzea hobekuntza bat litzateke. |
+| Datu okerrak edo bikoiztuak sartzea | Formularioetako datuak egiaztatzen dira gorde aurretik. |
+| Ikastaro baten edukiera gainditzea | Matrikula egitean eta berraktibatzean plaza libreak egiaztatzen dira. |
+| Konfigurazio pribatua agerian uztea | `.env` fitxategia eta sarbide-datuak pribatu mantendu behar dira. |
+| Informazioa galtzea | Aldizkako babeskopiak behar dira. |
+
+Benetako erabilerarako, probako pasahitzak ordeztu eta konexio segurua erabili behar da. Erabiltzaileek ere beren pasahitza pribatu mantendu eta partekatutako gailuetan saioa itxi behar dute.
+
+## 9. Kodearen kalitatea eta garapen-antolaketa
+
+PHP kodea objektuetara zuzendutako programazioaren oinarriak jarraituz antolatzen da. Erabiltzaileak, ikastaroak, rolak eta matrikulak bereizita lantzen dira, bakoitzaren ardura argi mantentzeko.
+
+Datuen kudeaketa eta pantailen aurkezpena bereizteak kodea ulertzea, berrerabiltzea eta zuzentzea errazten du. Erabiltzaileak bidalitako informazioa egiaztatzen da, eta pasahitzak ez dira testu arruntean gordetzen.
+
+Proiektuak proba automatizatuak ere baditu, besteak beste sarbideak, erregistroa, matrikulak, plaza-mugak eta estatistikak egiaztatzeko.
+
+## 10. Erabileran sor daitezkeen zalantzak
+
+| Egoera | Zer egin? |
+| --- | --- |
+| Ezin dut erregistratu | Egiaztatu administratzaileak zure emaila aurrez gehitu duela eta ez duzula kontua dagoeneko aktibatu. |
+| Ezin dut saioa hasi | Berrikusi helbide elektronikoa eta pasahitza. Saiakera gehiegi egin badituzu, itxaron adierazitako denbora. |
+| Pasahitza ahaztu dut | Jarri harremanetan arduradunarekin; webguneak ez du berreskuratze automatikorik. |
+| Ezin dut matrikulatu | Egiaztatu saioa hasita duzula, plaza libreak daudela eta ez zaudela aurretik matrikulatuta. |
+| Nire matrikula ez dago aktibo | Eskatu administratzaileari egoera berrikusteko. |
+| Datuak ez dira eguneratu | Freskatu orria azken informazioa ikusteko. |
+
+## 11. Erasoen aurkako segurtasun-neurriak
+
+Webguneak hainbat babes-neurri erabiltzen ditu baimenik gabeko sarbideak eta datuen manipulazioa zailtzeko. Babesa bai saioa hastean bai erabiltzaileak eragiketak egiten dituenean aplikatzen da.
+
+- **Sarbideen kontrola:** administrazio-panela eta haren eragiketak administratzaileentzat mugatuta daude. Helbidea zuzenean idazteak ez du baimen hori saihesten.
+- **Pasahitzen babesa:** pasahitzak hash moduan gordetzen dira, jatorrizko testua gorde gabe. Horrela, datu-basean ez dira zuzenean irakurtzeko moduan agertzen.
+- **Saiakera errepikatuen muga:** saio-hasierako eta erregistroko saiakerak mugatzen dira, pasahitzak automatikoki probatzea eta gehiegizko eskaerak zailtzeko.
+- **Formulario faltsuen aurkako babesa:** formularioek segurtasun-egiaztapen bat daramate, beste webgune batek erabiltzailearen saioa aprobetxatuz nahi gabeko eragiketak egitea eragozteko.
+- **Sartutako datuen egiaztapena:** sistemak formularioetako informazioa berrikusten du gorde aurretik. Baimenak eta matrikulazio-arauak zerbitzarian egiaztatzen dira, erabiltzaileak nabigatzailean aldaketak egin arren.
+- **Eduki kaltegarrien aurkako babesa:** erabiltzailearen datuak pantailan erakustean, testua kode exekutagarri gisa interpretatzea saihesteko neurriak aplikatzen dira.
+- **Datu-baseko kontsulten babesa:** datuak kontsultetan modu kontrolatuan erabiltzen dira, formulario batean idatzitako testuak datu-basearen aginduak aldatzeko arriskua murrizteko.
+- **Saioen kudeaketa:** saioa hastean haren identifikatzailea berritzen da, eta saioa ixtean baliogabetzen da, aurreko saioa berrerabiltzea zailtzeko.
+
+Neurri horiek arriskua murrizten dute, baina ez dute eraso guztien aurkako bermerik ematen. Babesa mantentzeko, arduradunak aplikazioa eguneratuta eduki, pasahitz sendoak erabili eta argitaratutako webgunean HTTPS konexioa konfiguratu behar du.

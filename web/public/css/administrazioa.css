@@ -203,3 +203,52 @@ tbody tr:hover{background:#f4f6f8}
 /* Keep user and course lists compact with persistent column headings. */
 .users-table-scroll,.course-roster .table-scroll{max-height:480px;max-height:min(480px,65vh);overflow:auto;scrollbar-gutter:stable}
 .users-table-scroll thead th,.course-roster .table-scroll thead th{position:sticky;top:0;z-index:1;background:#f7f8fa;box-shadow:0 1px 0 var(--border)}
+
+.actions-column,
+.delete-cell {
+    width: 80px;
+    text-align: center;
+}
+
+.delete-cell form {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.delete-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 38px;
+    height: 38px;
+    padding: 0;
+
+    border: 1px solid #e2bcbc;
+    border-radius: 8px;
+
+    background: #fff;
+    color: #b42318;
+
+    cursor: pointer;
+    transition: background-color .18s ease, border-color .18s ease, color .18s ease;
+}
+
+.delete-button:hover {
+    background: #fff1f0;
+    border-color: #d92d20;
+    color: #d92d20;
+}
+
+.delete-button svg {
+    display: block;
+}
+
+.delete-button.disabled,
+.delete-button:disabled {
+    background: #f3f4f6;
+    border-color: #e1e4e8;
+    color: #a0a6ad;
+    cursor: not-allowed;
+}

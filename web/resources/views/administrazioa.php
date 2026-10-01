@@ -69,21 +69,105 @@
             <div class="table-heading"><h2>Erabiltzaile guztiak</h2><span class="count"><?= e($erabiltzaileak->count()) ?> erabiltzaile</span></div>
             <div class="table-scroll users-table-scroll" tabindex="0" role="region" aria-label="Erabiltzaileen taula">
                 <table>
-                    <thead><tr><th scope="col">IDa</th><th scope="col">Izena</th><th scope="col">Abizenak</th><th scope="col">Helbide elektronikoa</th><th scope="col">Rolaren IDa</th><th scope="col">Rola</th><th scope="col">Kontuaren egoera</th></tr></thead>
+                    <thead>
+<tr>
+    <th scope="col">IDa</th>
+    <th scope="col">Izena</th>
+    <th scope="col">Abizenak</th>
+    <th scope="col">Helbide elektronikoa</th>
+    <th scope="col">Rolaren IDa</th>
+    <th scope="col">Rola</th>
+    <th scope="col">Kontuaren egoera</th>
+    <th scope="col" class="actions-column">Ezabatu</th>
+</tr>
+</thead>
                     <tbody>
                     <?php foreach ($erabiltzaileak as $erabiltzailea): ?>
-                        <tr<?= (string) session('created_student_id') === (string) $erabiltzailea->id_erabiltzailea ? ' class="student-created"' : '' ?>>
-                            <td><?= e($erabiltzailea->id_erabiltzailea) ?></td>
-                            <td><?= e($erabiltzailea->izena) ?></td>
-                            <td><?= e($erabiltzailea->abizenak) ?></td>
-                            <td><?= e($erabiltzailea->emaila) ?></td>
-                            <td><?= e($erabiltzailea->id_rola) ?></td>
-                            <td><?= e($erabiltzailea->rola?->rola_izena ?? 'Rolik gabe') ?></td>
-                            <td><span class="badge <?= $erabiltzailea->aktibo ? 'active' : 'inactive' ?>"><?= $erabiltzailea->aktibo ? 'Aktibo' : 'Ez aktibo' ?></span></td>
-                        </tr>
-                    <?php endforeach; ?>
+    <tr<?= (string) session('created_student_id') === (string) $erabiltzailea->id_erabiltzailea ? ' class="student-created"' : '' ?>>
+        <td><?= e($erabiltzailea->id_erabiltzailea) ?></td>
+        <td><?= e($erabiltzailea->izena) ?></td>
+        <td><?= e($erabiltzailea->abizenak) ?></td>
+        <td><?= e($erabiltzailea->emaila) ?></td>
+        <td><?= e($erabiltzailea->id_rola) ?></td>
+        <td><?= e($erabiltzailea->rola?->rola_izena ?? 'Rolik gabe') ?></td>
+        <td>
+            <span class="badge <?= $erabiltzailea->aktibo ? 'active' : 'inactive' ?>">
+                <?= $erabiltzailea->aktibo ? 'Aktibo' : 'Ez aktibo' ?>
+            </span>
+        </td>
+
+        <td class="delete-cell">
+            <?php if (auth()->id() !== $erabiltzailea->id_erabiltzailea): ?>
+
+                <form
+                    method="post"
+                    action="<?= e(route('users.destroy', $erabiltzailea)) ?>"
+                    onsubmit="return confirm('Ziur zaude erabiltzaile hau ezabatu nahi duzula?');"
+                >
+                    <input type="hidden" name="_token" value="<?= e(csrf_token()) ?>">
+                    <input type="hidden" name="_method" value="DELETE">
+
+                    <button
+                        type="submit"
+                        class="delete-button"
+                        title="Erabiltzailea ezabatu"
+                        aria-label="<?= e($erabiltzailea->izena) ?> ezabatu"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                        >
+                            <path d="M3 6h18"></path>
+                            <path d="M8 6V4h8v2"></path>
+                            <path d="M19 6l-1 14H6L5 6"></path>
+                            <path d="M10 11v5"></path>
+                            <path d="M14 11v5"></path>
+                        </svg>
+                    </button>
+                </form>
+
+            <?php else: ?>
+
+                <button
+                    type="button"
+                    class="delete-button disabled"
+                    title="Ezin duzu zure kontua ezabatu"
+                    disabled
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <path d="M3 6h18"></path>
+                        <path d="M8 6V4h8v2"></path>
+                        <path d="M19 6l-1 14H6L5 6"></path>
+                        <path d="M10 11v5"></path>
+                        <path d="M14 11v5"></path>
+                    </svg>
+                </button>
+
+            <?php endif; ?>
+        </td>
+    </tr>
+<?php endforeach; ?>
                     <?php if ($erabiltzaileak->isEmpty()): ?>
-                        <tr><td colspan="7" class="empty">Ez dago erabiltzaile erregistraturik.</td></tr>
+                        <tr><td colspan="8" class="empty">Ez dago erabiltzaile erregistraturik.</td></tr>
                     <?php endif; ?>
                     </tbody>
                 </table>

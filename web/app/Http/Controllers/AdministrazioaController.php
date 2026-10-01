@@ -95,6 +95,23 @@ class AdministrazioaController extends Controller
             ->header('Cache-Control', 'no-store, private');
     }
 
+    public function destroy(Erabiltzailea $erabiltzailea)
+{
+    if (Auth::id() === $erabiltzailea->id_erabiltzailea) {
+        return redirect()->route('administrazioa')->withErrors([
+            'erabiltzailea' => 'Ezin duzu zure administratzaile kontua ezabatu.',
+        ]);
+    }
+
+    $izena = $erabiltzailea->izena . ' ' . $erabiltzailea->abizenak;
+
+    $erabiltzailea->delete();
+
+    return redirect()
+        ->route('administrazioa')
+        ->with('status', $izena . ' erabiltzailea ezabatu da.');
+}
+
     public function logout(Request $request)
     {
         Auth::logout();
