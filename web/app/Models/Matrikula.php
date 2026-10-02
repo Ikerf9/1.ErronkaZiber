@@ -19,6 +19,9 @@ class Matrikula extends Model
         'egoera'
     ];
 
+    /**
+     * Define la relación con el usuario al que pertenece la matrícula mediante id_erabiltzailea.
+     */
     public function erabiltzailea()
     {
         return $this->belongsTo(
@@ -28,6 +31,9 @@ class Matrikula extends Model
         );
     }
 
+    /**
+     * Define la relación con el curso de la matrícula mediante id_ikastaroa.
+     */
     public function ikastaroa()
     {
         return $this->belongsTo(

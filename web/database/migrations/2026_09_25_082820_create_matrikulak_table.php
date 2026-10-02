@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Crea las matrículas que relacionan usuarios y cursos, con fecha y estado.
+     * Impide duplicar la pareja usuario-curso y elimina sus matrículas cuando se borra el usuario o el curso.
+     */
     public function up(): void
     {
         Schema::create('matrikulak', function (Blueprint $table) {
@@ -34,6 +38,9 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Elimina la tabla de matrículas al revertir esta migración.
+     */
     public function down(): void
     {
         Schema::dropIfExists('matrikulak');

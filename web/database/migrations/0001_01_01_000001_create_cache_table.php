@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Crea las tablas para guardar la caché y los bloqueos que coordinan operaciones simultáneas.
      */
     public function up(): void
     {
@@ -25,7 +25,7 @@ return new class extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Elimina las tablas de caché y sus bloqueos al revertir esta migración.
      */
     public function down(): void
     {

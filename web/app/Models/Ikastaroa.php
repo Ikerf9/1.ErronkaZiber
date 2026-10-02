@@ -10,7 +10,10 @@ class Ikastaroa extends Model
 
     protected $attributes = ['edukiera' => self::MAX_CAPACITY];
 
-    // Apply the same hard limit to enrollment checks, views and statistics.
+    /**
+     * Al leer la capacidad, devuelve un entero entre 0 y 30; si es nula, utiliza 30.
+     * Así las comprobaciones de matrícula, las vistas y las estadísticas comparten el mismo límite.
+     */
     public function getEdukieraAttribute($value): int
     {
         return min(self::MAX_CAPACITY, max(0, (int) ($value ?? self::MAX_CAPACITY)));
@@ -30,6 +33,9 @@ class Ikastaroa extends Model
         'amaiera_data'
     ];
 
+    /**
+     * Define la relación con todas las matrículas del curso mediante id_ikastaroa.
+     */
     public function matrikulak()
     {
         return $this->hasMany(
@@ -39,6 +45,9 @@ class Ikastaroa extends Model
         );
     }
 
+    /**
+     * Define la relación con los usuarios inscritos usando matrikulak como tabla intermedia.
+     */
     public function erabiltzaileak()
     {
         return $this->belongsToMany(

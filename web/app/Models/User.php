@@ -35,7 +35,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * Convierte la fecha de verificación en un objeto de fecha y aplica hash a la contraseña al asignarla.
      *
      * @return array<string, string>
      */

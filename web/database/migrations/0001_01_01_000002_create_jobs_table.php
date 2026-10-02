@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Crea las tablas de tareas en cola, lotes de tareas y tareas fallidas de Laravel.
      */
     public function up(): void
     {
@@ -46,7 +46,7 @@ return new class extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Elimina las tablas de tareas, lotes y fallos al revertir esta migración.
      */
     public function down(): void
     {

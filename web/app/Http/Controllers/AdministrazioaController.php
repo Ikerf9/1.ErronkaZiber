@@ -13,6 +13,9 @@ use Illuminate\Validation\ValidationException;
 
 class AdministrazioaController extends Controller
 {
+    /**
+     * Muestra el formulario de acceso o redirige al usuario que ya tiene una sesión iniciada.
+     */
     public function login()
     {
         if (Auth::user()?->rola?->rola_izena === 'admin') {
@@ -25,6 +28,10 @@ class AdministrazioaController extends Controller
         return view('login');
     }
 
+    /**
+     * Valida las credenciales de una cuenta activa de administrador o alumno.
+     * Limita los intentos por correo e IP, renueva la sesión y redirige según el rol.
+     */
     public function authenticate(Request $request)
     {
         $request->merge(['emaila' => mb_strtolower(trim((string) $request->input('emaila')))]);
@@ -68,6 +75,10 @@ class AdministrazioaController extends Controller
         return redirect()->route(Auth::user()->rola?->rola_izena === 'admin' ? 'administrazioa' : 'home');
     }
 
+    /**
+     * Carga los cursos, sus matrículas y los usuarios con sus roles.
+     * Calcula las estadísticas de alumnos y plazas y muestra el panel sin permitir su almacenamiento en caché.
+     */
     public function index()
     {
         $ikastaroak = Ikastaroa::with('matrikulak.erabiltzailea')->orderBy('hasiera_data')->get();
@@ -98,6 +109,9 @@ class AdministrazioaController extends Controller
             ->header('Cache-Control', 'no-store, private');
     }
 
+    /**
+     * Carga los roles disponibles y muestra el formulario de edición del usuario.
+     */
     public function edit(Erabiltzailea $erabiltzailea)
     {
         $rolak = Rola::orderBy('rola_izena')->get();
@@ -106,6 +120,10 @@ class AdministrazioaController extends Controller
             ->header('Cache-Control', 'no-store, private');
     }
 
+    /**
+     * Valida y actualiza los datos, el rol y el estado del usuario.
+     * Impide que el administrador desactive su propia cuenta o se quite el rol de administrador.
+     */
     public function update(Request $request, Erabiltzailea $erabiltzailea)
     {
         if (is_string($request->input('emaila'))) {
@@ -139,6 +157,10 @@ class AdministrazioaController extends Controller
         return redirect()->route('administrazioa')->with('status', 'Erabiltzailearen datuak eguneratu dira.');
     }
 
+    /**
+     * Elimina el usuario y sus matrículas asociadas, salvo si es el administrador conectado.
+     * Redirige al panel con un mensaje que identifica al usuario eliminado.
+     */
     public function destroy(Erabiltzailea $erabiltzailea)
 {
     if (Auth::id() === $erabiltzailea->id_erabiltzailea) {
@@ -156,6 +178,9 @@ class AdministrazioaController extends Controller
         ->with('status', $izena . ' erabiltzailea ezabatu da.');
 }
 
+    /**
+     * Cierra la sesión, invalida sus datos y genera un nuevo token CSRF antes de volver al acceso.
+     */
     public function logout(Request $request)
     {
         Auth::logout();

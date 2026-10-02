@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\DB;
 
 class MatrikulaController extends Controller
 {
+    /**
+     * Valida el estado solicitado y activa o desactiva la matrícula dentro de una transacción.
+     * Para reactivarla, comprueba que el alumno esté activo, tenga el rol de alumno y haya plazas disponibles.
+     */
     public function update(Request $request, Matrikula $matrikula)
     {
         $data = $request->validate([
@@ -18,7 +22,7 @@ class MatrikulaController extends Controller
         ]);
 
         $error = DB::transaction(function () use ($matrikula, $data) {
-            // Serialize capacity checks with new enrollments in SQLite.
+            // Esta escritura sin cambio de valor coordina la comprobación de plazas con las nuevas matrículas en SQLite.
             DB::table('ikastaroak')->where('id_ikastaroa', $matrikula->id_ikastaroa)
                 ->update(['edukiera' => DB::raw('edukiera')]);
             $matrikula->refresh();

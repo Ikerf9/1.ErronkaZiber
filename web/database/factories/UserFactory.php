@@ -18,7 +18,7 @@ class UserFactory extends Factory
     protected static ?string $password;
 
     /**
-     * Define the model's default state.
+     * Genera un usuario de prueba con correo único, correo verificado y contraseña almacenada como hash.
      *
      * @return array<string, mixed>
      */
@@ -34,7 +34,7 @@ class UserFactory extends Factory
     }
 
     /**
-     * Indicate that the model's email address should be unverified.
+     * Configura el usuario de prueba con el correo pendiente de verificación.
      */
     public function unverified(): static
     {

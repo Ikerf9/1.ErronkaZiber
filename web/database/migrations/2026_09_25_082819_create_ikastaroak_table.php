@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Crea la tabla de cursos con título, descripción, fechas y capacidad predeterminada de 30 plazas.
+     */
     public function up(): void
     {
         Schema::create('ikastaroak', function (Blueprint $table) {
@@ -18,6 +21,9 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Elimina la tabla de cursos al revertir esta migración.
+     */
     public function down(): void
     {
         Schema::dropIfExists('ikastaroak');

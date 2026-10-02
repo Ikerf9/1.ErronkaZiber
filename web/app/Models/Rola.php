@@ -17,6 +17,9 @@ class Rola extends Model
         'deskribapena'
     ];
 
+    /**
+     * Define la relación con todos los usuarios que tienen este rol mediante id_rola.
+     */
     public function erabiltzaileak()
     {
         return $this->hasMany(

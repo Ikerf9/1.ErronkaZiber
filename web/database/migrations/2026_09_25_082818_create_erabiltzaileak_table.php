@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Crea los usuarios con correo único, contraseña opcional y cuenta inicialmente inactiva.
+     * Relaciona cada usuario con un rol mediante una clave foránea.
+     */
     public function up(): void
     {
         Schema::create('erabiltzaileak', function (Blueprint $table) {
@@ -26,6 +30,9 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Elimina la tabla de usuarios al revertir esta migración.
+     */
     public function down(): void
     {
         Schema::dropIfExists('erabiltzaileak');

@@ -9,6 +9,10 @@ use Illuminate\Database\Seeder;
 
 class IkastetxeaSeeder extends Seeder
 {
+    /**
+     * Crea el rol de alumno, los alumnos de ejemplo sin activar y los cursos iniciales.
+     * Usa firstOrCreate para conservar los registros existentes al ejecutar de nuevo el seeder.
+     */
     public function run(): void
     {
         $role = Rola::firstOrCreate(['rola_izena' => 'ikasleak'], ['deskribapena' => 'Ikasleak']);

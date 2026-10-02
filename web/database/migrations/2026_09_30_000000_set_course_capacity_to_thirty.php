@@ -5,6 +5,10 @@ use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
+    /**
+     * Establece la capacidad de todos los cursos en 30 dentro de una transacción.
+     * Interrumpe la migración si algún curso ya tiene más de 30 matrículas activas.
+     */
     public function up(): void
     {
         DB::transaction(function () {
@@ -16,9 +20,12 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Conserva las capacidades y las matrículas porque no se pueden recuperar las capacidades anteriores.
+     */
     public function down(): void
     {
-        // Previous per-course capacities cannot be recovered reliably.
-        // Keep the capacity and all existing enrollments intact.
+        // No se pueden recuperar con fiabilidad las capacidades anteriores de cada curso.
+        // Se conservan la capacidad y todas las matrículas existentes.
     }
 };

@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Crea la tabla de roles con su identificador, nombre y descripción opcional.
+     */
     public function up(): void
     {
         Schema::create('rolak', function (Blueprint $table) {
@@ -15,6 +18,9 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Elimina la tabla de roles al revertir esta migración.
+     */
     public function down(): void
     {
         Schema::dropIfExists('rolak');

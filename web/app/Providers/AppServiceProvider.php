@@ -7,7 +7,7 @@ use Illuminate\Support\ServiceProvider;
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * Punto de registro de servicios en el contenedor de Laravel; actualmente no añade servicios propios.
      */
     public function register(): void
     {
@@ -15,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Bootstrap any application services.
+     * Punto de inicialización tras registrar los servicios; actualmente no ejecuta acciones adicionales.
      */
     public function boot(): void
     {

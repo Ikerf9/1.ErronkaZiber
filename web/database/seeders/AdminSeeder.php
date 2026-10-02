@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminSeeder extends Seeder
 {
+    /**
+     * Crea el rol y la cuenta de administrador si no existen, dentro de una transacción.
+     * Guarda la contraseña como hash y conserva los datos de las cuentas ya existentes.
+     */
     public function run(): void
     {
         DB::transaction(function () {

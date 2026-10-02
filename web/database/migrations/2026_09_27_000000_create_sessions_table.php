@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Crea la tabla donde Laravel guarda los datos de sesión, el usuario y su última actividad.
+     */
     public function up(): void
     {
         Schema::create('sessions', function (Blueprint $table) {
@@ -18,6 +21,9 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Elimina la tabla de sesiones al revertir esta migración.
+     */
     public function down(): void
     {
         Schema::dropIfExists('sessions');
