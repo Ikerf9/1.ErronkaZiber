@@ -252,3 +252,34 @@ tbody tr:hover{background:#f4f6f8}
     color: #a0a6ad;
     cursor: not-allowed;
 }
+
+/* Compact course management for administrators. */
+.admin-catalog .course-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:start}
+.admin-catalog .course-card{padding:20px;border-radius:12px}
+.admin-catalog .course-card h2{font-size:1.1rem;margin:12px 0 8px;overflow-wrap:anywhere}
+.admin-catalog .course-card>.eyebrow{font-size:.6rem;padding:5px 8px}
+.admin-catalog .course-card>.subtitle{font-size:.83rem;line-height:1.55;margin-bottom:14px;overflow-wrap:anywhere}
+.admin-catalog .course-details{padding:12px;gap:12px;margin-bottom:14px}
+.admin-catalog .course-details dd{font-size:.78rem}
+.admin-catalog .course-action:empty{display:none}
+.course-admin-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.course-admin-actions form{margin:0}
+.course-admin-actions button,.course-admin-actions .button-link{padding:8px 12px;font-size:.8rem}
+.course-delete{background:#fff;color:#b42318;border-color:#e2bcbc}
+.course-delete:hover{background:#fff1f0;color:#b42318}
+.course-students{margin-top:14px;min-width:0}
+.course-students summary{cursor:pointer;font-size:.82rem;font-weight:650;padding:10px 0}
+.course-students summary:focus-visible,textarea:focus-visible{outline:3px solid #7b8798;outline-offset:3px}
+.course-students .course-roster{margin-top:12px}
+.course-admin-card{margin-bottom:14px}
+.course-admin-card .table-heading{padding:14px 18px}
+.course-admin-card>.course-admin-actions{padding:0 18px;margin-top:12px}
+.course-admin-card>.course-students{margin:8px 18px 12px}
+.course-editor{max-width:800px}
+.course-form textarea{display:block;width:100%;padding:12px 14px;border:1px solid #c4c9d0;border-radius:6px;font:inherit;background:var(--surface);color:var(--ink);margin-bottom:21px;resize:vertical}
+.course-form-dates{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media(max-width:1000px){.admin-catalog .course-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.admin-catalog .course-grid,.course-form-dates{grid-template-columns:1fr}}
+
+.user-form select{display:block;width:100%;padding:12px 14px;border:1px solid #c4c9d0;border-radius:6px;font:inherit;margin-bottom:21px;background:var(--surface);color:var(--ink)}
+.user-form select:focus-visible{outline:3px solid #7b8798;outline-offset:3px}

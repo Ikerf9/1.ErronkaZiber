@@ -12,6 +12,10 @@ Route::post('/login.php', [AdministrazioaController::class, 'authenticate'])->na
 Route::get('/erregistratu.php', [IkastaroController::class, 'register'])->name('register');
 Route::post('/erregistratu.php', [IkastaroController::class, 'storeRegistration'])->name('register.submit');
 Route::get('/administrazioa.php', [AdministrazioaController::class, 'index'])->middleware(AdminOnly::class)->name('administrazioa');
+Route::get('/erabiltzaileak/{erabiltzailea}/editatu', [AdministrazioaController::class, 'edit'])
+    ->middleware(AdminOnly::class)->name('users.edit');
+Route::patch('/erabiltzaileak/{erabiltzailea}', [AdministrazioaController::class, 'update'])
+    ->middleware(AdminOnly::class)->name('users.update');
 Route::delete('/erabiltzaileak/{erabiltzailea}', [AdministrazioaController::class, 'destroy'])
     ->middleware(AdminOnly::class)
     ->name('users.destroy');
@@ -23,3 +27,11 @@ Route::post('/irten', [AdministrazioaController::class, 'logout'])->name('logout
 Route::patch('/matrikulak/{matrikula}', [\App\Http\Controllers\MatrikulaController::class, 'update'])->middleware(AdminOnly::class)->name('enrollments.update');
 
 
+
+Route::middleware(AdminOnly::class)->group(function () {
+    Route::get('/ikastaroak/sortu', [IkastaroController::class, 'create'])->name('courses.create');
+    Route::post('/ikastaroak', [IkastaroController::class, 'store'])->name('courses.store');
+    Route::get('/ikastaroak/{ikastaroa}/editatu', [IkastaroController::class, 'edit'])->name('courses.edit');
+    Route::patch('/ikastaroak/{ikastaroa}', [IkastaroController::class, 'update'])->name('courses.update');
+    Route::delete('/ikastaroak/{ikastaroa}', [IkastaroController::class, 'destroy'])->name('courses.destroy');
+});

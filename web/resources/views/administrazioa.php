@@ -78,6 +78,7 @@
     <th scope="col">Rolaren IDa</th>
     <th scope="col">Rola</th>
     <th scope="col">Kontuaren egoera</th>
+    <th scope="col" class="actions-column">Editatu</th>
     <th scope="col" class="actions-column">Ezabatu</th>
 </tr>
 </thead>
@@ -96,6 +97,7 @@
             </span>
         </td>
 
+        <td><a class="button-link secondary" href="<?= e(route('users.edit', $erabiltzailea)) ?>" aria-label="<?= e($erabiltzailea->izena.' '.$erabiltzailea->abizenak) ?> editatu">Editatu</a></td>
         <td class="delete-cell">
             <?php if (auth()->id() !== $erabiltzailea->id_erabiltzailea): ?>
 
@@ -167,14 +169,14 @@
     </tr>
 <?php endforeach; ?>
                     <?php if ($erabiltzaileak->isEmpty()): ?>
-                        <tr><td colspan="8" class="empty">Ez dago erabiltzaile erregistraturik.</td></tr>
+                        <tr><td colspan="9" class="empty">Ez dago erabiltzaile erregistraturik.</td></tr>
                     <?php endif; ?>
                     </tbody>
                 </table>
             </div>
         </section>
         <section class="course-management" aria-labelledby="courses-title">
-            <h2 id="courses-title">Ikastaroak eta ikasleak</h2>
+            <div class="catalog-heading"><h2 id="courses-title">Ikastaroak eta ikasleak</h2></div>
             <p class="subtitle">Kudeatu ikastaro bakoitzeko matrikulak. Matrikula desaktibatzeak ez du ikaslearen kontua edo beste ikastaroetako matrikularik aldatzen.</p>
             <?php foreach ($ikastaroak as $ikastaroa): ?>
                 <article class="table-card course-admin-card">
@@ -182,7 +184,9 @@
                         <h3><?= e($ikastaroa->izenburua) ?></h3>
                         <span class="count"><?= e($ikastaroa->matrikulak->where('egoera', 'aktibo')->count()) ?> / <?= e($ikastaroa->edukiera) ?> plaza beteta</span>
                     </div>
-                    <?= view('ikastaroko-ikasleak', ['ikastaroa' => $ikastaroa])->render() ?>
+                    <details class="course-students"><summary>Ikasleak ikusi</summary>
+                        <?= view('ikastaroko-ikasleak', ['ikastaroa' => $ikastaroa])->render() ?>
+                    </details>
                 </article>
             <?php endforeach; ?>
             <?php if ($ikastaroak->isEmpty()): ?><p>Oraindik ez dago ikastarorik.</p><?php endif; ?>

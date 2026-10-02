@@ -26,6 +26,75 @@ class IkastaroController extends Controller
         ])->header('Cache-Control', 'no-store, private');
     }
 
+    public function create()
+    {
+        return view('ikastaro-form', ['ikastaroa' => new Ikastaroa]);
+    }
+
+    public function edit(Ikastaroa $ikastaroa)
+    {
+        return view('ikastaro-form', compact('ikastaroa'));
+    }
+
+    public function store(Request $request)
+    {
+        Ikastaroa::create($this->validateCourse($request));
+
+        return redirect()->route('home')->with('status', 'Ikastaroa sortu da.');
+    }
+
+    public function update(Request $request, Ikastaroa $ikastaroa)
+    {
+        $data = $this->validateCourse($request);
+        DB::transaction(function () use ($data, $ikastaroa) {
+            DB::table('ikastaroak')->where('id_ikastaroa', $ikastaroa->id_ikastaroa)
+                ->update(['edukiera' => DB::raw('edukiera')]);
+            $course = Ikastaroa::whereKey($ikastaroa->id_ikastaroa)->lockForUpdate()->firstOrFail();
+            if ($data['edukiera'] < $course->matrikulak()->where('egoera', 'aktibo')->count()) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'edukiera' => 'Edukiera ezin da matrikula aktiboen kopurua baino txikiagoa izan.',
+                ]);
+            }
+            $course->update($data);
+        });
+
+        return redirect()->route('home')->with('status', 'Ikastaroa eguneratu da.');
+    }
+
+    public function destroy(Ikastaroa $ikastaroa)
+    {
+        DB::transaction(function () use ($ikastaroa) {
+            $ikastaroa->matrikulak()->delete();
+            $ikastaroa->delete();
+        });
+
+        return redirect()->route('home')->with('status', 'Ikastaroa eta bere matrikulak ezabatu dira.');
+    }
+
+    private function validateCourse(Request $request): array
+    {
+        return $request->validate([
+            'izenburua' => ['required', 'string', 'max:255'],
+            'deskribapena' => ['nullable', 'string', 'max:10000'],
+            'edukiera' => ['required', 'integer', 'min:1', 'max:'.Ikastaroa::MAX_CAPACITY],
+            'hasiera_data' => ['required', 'date_format:Y-m-d'],
+            'amaiera_data' => ['required', 'date_format:Y-m-d', 'after_or_equal:hasiera_data'],
+        ], [
+            'required' => ':attribute eremua bete behar da.',
+            'string' => ':attribute eremuak testua izan behar du.',
+            'izenburua.max' => 'Izenburuak gehienez 255 karaktere izan ditzake.',
+            'deskribapena.max' => 'Deskribapena luzeegia da.',
+            'edukiera.integer' => 'Plaza kopuruak zenbaki osoa izan behar du.',
+            'edukiera.min' => 'Gutxienez plaza bat egon behar da.',
+            'edukiera.max' => 'Gehienez '.Ikastaroa::MAX_CAPACITY.' plaza egon daitezke.',
+            'date_format' => ':attribute eremuak baliozko data izan behar du.',
+            'amaiera_data.after_or_equal' => 'Amaiera-data ezin da hasiera-data baino lehenagokoa izan.',
+        ], [
+            'izenburua' => 'Izenburua', 'deskribapena' => 'Deskribapena',
+            'edukiera' => 'Plaza kopurua', 'hasiera_data' => 'Hasiera-data', 'amaiera_data' => 'Amaiera-data',
+        ]);
+    }
+
     public function register()
     {
         if (Auth::check()) {
@@ -70,8 +139,14 @@ class IkastaroController extends Controller
             ->update(['pasahitza' => Hash::make($data['pasahitza']), 'aktibo' => true]);
 
         if (! $updated) {
+            $alreadyRegistered = Erabiltzailea::where('emaila', $data['emaila'])
+                ->whereHas('rola', fn ($query) => $query->where('rola_izena', 'ikasleak'))
+                ->whereNotNull('pasahitza')->exists();
+
             return back()->withErrors([
-                'emaila' => 'Ezin da erregistroa osatu. Administratzaileak aurrez ikasle gisa gehitu behar zaitu, eta ezin duzu dagoeneko erregistratuta egon.',
+                'emaila' => $alreadyRegistered
+                    ? 'Kontu hau dagoeneko erregistratuta dago. Joan Saioa hasi atalera eta erabili erregistratzean aukeratu zenuen pasahitza.'
+                    : 'Ezin da erregistroa osatu. Administratzaileak aurrez ikasle gisa gehitu behar zaitu. Egiaztatu emandako emaila.',
             ])->withInput($request->only('emaila'));
         }
 

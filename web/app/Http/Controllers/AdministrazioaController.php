@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Erabiltzailea;
 use App\Models\Ikastaroa;
+use App\Models\Rola;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class AdministrazioaController extends Controller
 {
@@ -93,6 +96,47 @@ class AdministrazioaController extends Controller
 
         return response()->view('administrazioa', compact('ikastaroak', 'erabiltzaileak', 'stats', 'courseStats'))
             ->header('Cache-Control', 'no-store, private');
+    }
+
+    public function edit(Erabiltzailea $erabiltzailea)
+    {
+        $rolak = Rola::orderBy('rola_izena')->get();
+
+        return response()->view('erabiltzaile-form', compact('erabiltzailea', 'rolak'))
+            ->header('Cache-Control', 'no-store, private');
+    }
+
+    public function update(Request $request, Erabiltzailea $erabiltzailea)
+    {
+        if (is_string($request->input('emaila'))) {
+            $request->merge(['emaila' => mb_strtolower(trim($request->input('emaila')))]);
+        }
+        $data = $request->validate([
+            'izena' => ['required', 'string', 'max:255'],
+            'abizenak' => ['required', 'string', 'max:255'],
+            'emaila' => ['required', 'email', 'max:255', Rule::unique('erabiltzaileak', 'emaila')->ignore($erabiltzailea->getKey(), 'id_erabiltzailea')],
+            'id_rola' => ['required', 'integer', Rule::exists('rolak', 'id_rola')],
+            'aktibo' => ['required', 'boolean'],
+        ], [
+            'izena.required' => 'Idatzi erabiltzailearen izena.',
+            'abizenak.required' => 'Idatzi erabiltzailearen abizenak.',
+            'emaila.required' => 'Idatzi helbide elektronikoa.',
+            'emaila.email' => 'Idatzi baliozko helbide elektroniko bat.',
+            'emaila.unique' => 'Helbide elektroniko hau dagoeneko erabiltzen da.',
+            'id_rola.exists' => 'Aukeratu baliozko rol bat.',
+            'aktibo.boolean' => 'Aukeratu baliozko kontu-egoera bat.',
+        ]);
+
+        if (Auth::id() === $erabiltzailea->getKey()
+            && (! $data['aktibo'] || Rola::findOrFail($data['id_rola'])->rola_izena !== 'admin')) {
+            throw ValidationException::withMessages([
+                'erabiltzailea' => 'Ezin duzu zure administratzaile kontua desaktibatu edo administratzaile rola kendu.',
+            ]);
+        }
+
+        $erabiltzailea->update($data);
+
+        return redirect()->route('administrazioa')->with('status', 'Erabiltzailearen datuak eguneratu dira.');
     }
 
     public function destroy(Erabiltzailea $erabiltzailea)

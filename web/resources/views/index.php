@@ -6,7 +6,7 @@
     <title>Ikastaroak | Ikastetxea</title>
     <link rel="stylesheet" href="<?= e(asset('css/administrazioa.css')) ?>">
 </head>
-<body class="student-page">
+<body class="student-page<?= auth()->user()?->rola?->rola_izena === 'admin' ? ' admin-catalog' : '' ?>">
 <header class="topbar">
     <a class="brand" href="<?= e(route('home')) ?>">IKASTETXEA</a>
     <nav class="account" aria-label="Menu nagusia">
@@ -45,6 +45,9 @@
         <div class="error" role="alert"><?php foreach ($errors->all() as $error): ?><p><?= e($error) ?></p><?php endforeach; ?></div>
     <?php endif; ?>
     <div class="catalog-heading" id="ikastaroak"><h2>Ikastaro guztiak</h2><span class="count"><?= e($ikastaroak->count()) ?> ikastaro</span></div>
+    <?php if (auth()->user()?->rola?->rola_izena === 'admin'): ?>
+        <p><a class="button-link" href="<?= e(route('courses.create')) ?>">+ Ikastaro berria sortu</a></p>
+    <?php endif; ?>
     <div class="course-grid">
     <?php foreach ($ikastaroak as $ikastaroa): ?>
         <article class="course-card">
@@ -76,7 +79,10 @@
             <?php endif; ?>
             </div>
             <?php if (auth()->user()?->rola?->rola_izena === 'admin'): ?>
-                <?= view('ikastaroko-ikasleak', ['ikastaroa' => $ikastaroa])->render() ?>
+                <?= view('ikastaro-ekintzak', ['ikastaroa' => $ikastaroa])->render() ?>
+                <details class="course-students"><summary>Ikasleak ikusi</summary>
+                    <?= view('ikastaroko-ikasleak', ['ikastaroa' => $ikastaroa])->render() ?>
+                </details>
             <?php endif; ?>
         </article>
     <?php endforeach; ?>

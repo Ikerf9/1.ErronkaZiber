@@ -74,8 +74,13 @@ class IkastetxeaTest extends TestCase
         $hash = $student->pasahitza;
         $this->post('/erregistratu.php', [
             'emaila' => $student->emaila, 'pasahitza' => 'Changed123', 'pasahitza_confirmation' => 'Changed123',
-        ])->assertSessionHasErrors('emaila');
+        ])->assertSessionHasErrors([
+            'emaila' => 'Kontu hau dagoeneko erregistratuta dago. Joan Saioa hasi atalera eta erabili erregistratzean aukeratu zenuen pasahitza.',
+        ]);
         $this->assertSame($hash, $student->fresh()->pasahitza);
+        $this->post('/login.php', ['emaila' => $student->emaila, 'pasahitza' => 'Ikasle123'])
+            ->assertRedirect('/index.php');
+        $this->assertAuthenticatedAs($student);
     }
 
     public function test_password_confirmation_is_required_and_passwords_are_not_flashed(): void
