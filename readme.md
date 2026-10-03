@@ -175,6 +175,9 @@ flowchart TD
 ├── diagrams/                 # Diagramas de red y arquitectura
 │   ├── topologia.png
 │   └── mikrotik_interfaces.png
+├── backups/                  # Backups de Pfsense y Mikrotik
+│   └── Backups-20261003T130145Z-1-001.zip
+│ 
 ├── docker/                   # Archivos de configuración de Docker
 │   ├── web/
 │   │   ├── Dockerfile
