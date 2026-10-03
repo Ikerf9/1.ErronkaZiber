@@ -85,7 +85,7 @@ flowchart TD
 
 | Hostname | Tipo | Fabricante / Modelo | IP gestión | Ubicación | Firmware | Rol |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **MikroTik** | Router/Switch | MikroTik | 192.168.0.2 | Rack | RouterOS | Borde / NAT |
+| **MikroTik** | Router/Switch | MikroTik | 192.168.0.254 | Rack | RouterOS | Borde / NAT |
 | **pfSense** | Firewall | Netgate (VM) | 192.168.0.2 | Proxmox | pfSense CE | Firewall / Enrutador |
 | **Proxmox** | Hipervisor | Proxmox VE 9.2.2 | 192.168.0.1 | Rack | 9.2.2 | Virtualización |
 
@@ -112,9 +112,9 @@ flowchart TD
 
 | Aplicación | Versión | Servidor | Puerto | URL | Criticidad |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Nginx (Docker)** | Última | Ubu-Server-Web | 80, 443 | https://... | Alta |
+| **Nginx (Docker)** | Última | Ubu-Server-Web | 80, 443 | https://192.168.74.60 | Alta |
 | **PostgreSQL (Docker)** | PostgreSQL 16 | Ubu-Server-DB | 5432 | - | Alta |
-| **Active Directory** | Win Server 2019 | WinServerTald2 | 53, 88, 389... | - | Alta |
+| **Active Directory** | Win Server 2019 | WinServerTald2 | 80, 443, 445, 631, 9100, 3389, 22 | - | Alta |
 
 ---
 
@@ -175,18 +175,8 @@ flowchart TD
 ├── diagrams/                 # Diagramas de red y arquitectura
 │   ├── topologia.png
 │   └── mikrotik_interfaces.png
-├── backups/                  # Backups de Pfsense y Mikrotik
-│   └── Backups-20261003T130145Z-1-001.zip
-│ 
-├── docker/                   # Archivos de configuración de Docker
-│   ├── web/
-│   │   ├── Dockerfile
-│   │   └── nginx.conf
-│   └── db/
-│       ├── Dockerfile
-│       └── init.sql
-└── proxmox/                  # Scripts de despliegue o backups de Proxmox
-    └── backup_config.sh
+└── backups/                  # Backups de Pfsense y Mikrotik
+    └── Backups-20261003T130145Z-1-001.zip
 ```
 
 ---
