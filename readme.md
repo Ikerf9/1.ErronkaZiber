@@ -1,155 +1,189 @@
-# Informazioaren Teknologien Inguruneetan Zibersegurtasuneko Espezializazio-Ikastaroa
+# 🛡️ Documentación de Red y Sistemas — Erronka 1 (Talde 2)
 
-**Iraupena:** 18 egun
-**Antolaketa:** 4 pertsonako taldeak
+![Proxmox](https://img.shields.io/badge/Proxmox-VE%209.2.2-E35A44?style=flat-square&logo=proxmox)
+![pfSense](https://img.shields.io/badge/pfSense-Firewall-005A8E?style=flat-square)
+![Docker](https://img.shields.io/badge/Docker-Contenedores-2496ED?style=flat-square&logo=docker)
+![Nginx](https://img.shields.io/badge/Nginx-Servidor%20Web-009639?style=flat-square&logo=nginx)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Base%20de%20Datos-4169E1?style=flat-square&logo=postgresql)
 
-**Modulu-blokeak:** Zibersegurtasun-gorabeherak, Sareak eta sistemak gotortzea, Ekoizpen seguruan jartzea, Auzitegi-analisi informatikoa, Hacking etikoa eta Zibersegurtasunaren arloko araudia.
+## 📖 Descripción General
 
----
+Este repositorio contiene la documentación técnica y la arquitectura de la infraestructura de red y sistemas para el **Reto 1: Asentando las bases** (Proyecto Erronka 1 - Talde 2, Eskola).
 
-## 1. Erronka — Oinarriak finkatzen
+El objetivo es desplegar una arquitectura de red segmentada, bastionada y monitorizada. La infraestructura está diseñada para alojar los servicios del proyecto (sitio web, base de datos, gestión de usuarios y cursos) de forma segura, aplicando medidas de prevención, concienciación y respuesta ante incidentes.
 
-### Azalpen laburra
+### 🛠️ Stack Tecnológico
 
-Oinarriak finkatzeko erronka izango da. Talde bakoitzak enpresa baten ardura hartu eta honen zibersegurtasunaren gorabeherak, sare eta sistemen gotortzea, software ekoizpen segurua, auzitegi-analisi informatikoa, hacking etiko bidezko lanketa eta araudiari dagozkion zereginak hartu beharko ditu beregain.
-
-### Erronka
-
-Web orria ariketa klasean egindakoa erabili behar da: **CRUD oso bat** (ikasleak sortu, zerrendatu, aldatu eta ezabatu).
-
-Orri hori eskolako web orriaren administratzailearentzat utziko da, eta aurretik eskolako beste `index` bat sortu beharko da:
-
-1. Egindako orriari izena aldatu: **`administrazioa.php`**
-2. **`index.php`** berria sortu, honekin:
-   - Ikastetxean ematen diren kurtso guztien zerrenda bat
-   - Goian, login-a egiteko edo erregistratzeko menu bat
-3. Erregistratzen uzteko, aurretik administratzaileak ikaslea taulan sartuta eduki behar du.
-4. Login-a eginda, kurtso bakoitzaren alboan matrikulatzeko botoi bat agertuko da.
-5. Login-a egiten duena administratzailea bada, zuzenean `administrazioa.php` orrira eraman behar zaio.
-6. Datu-basean beste bi taula sortu: **`Usuarios`** eta **`Cursos`**.
-
-> Klaseak nahi badira erabili: `Model` karpeta bat sortu eta hiru klase (taula bakoitzarentzat bat), datu-basera egiten diren atzipen guztien metodoekin.
-
-**Hacking etikoa:** enpresa bat hackeatzeko jarraitu beharreko pausoak eta pauso bakoitzean erabili daitezkeen tresnak definitu. Pentesting-eko dokumentazio-egitura ere sortu.
-
-**Auzitegi-analisia:** oinarrizko analisi bat abiarazi (identifikatu eta babestu, zaintza-katea bermatuta), aurrerago egingo diren analisietarako.
-
-**Sareak/sistemak:** talde bakoitzak bere azpisarea eta zerbitzariak konfiguratu behar ditu, gutxienez lau esparrurekin:
-
-- Web gunea kokatuko den DMZ
-- Erabiltzaileen sarea
-- Zerbitzarien sarea
-- Sistemen sarea
-
-**Prebentzioa:** gertakarien aurrean nola jokatu jasoko duen oinarrizko prebentzio-plana eta kontzientziazio-kanpaina bat zehaztu.
+*   **Virtualización:** Proxmox VE 9.2.2 (Nodo `talde2`)
+*   **Red y Seguridad:** MikroTik (Router de borde), pfSense (Firewall y enrutamiento inter-VLAN)
+*   **Servidores:** Windows Server 2019 (AD/DNS), Ubuntu Server (Servicios)
+*   **Servicios y Contenedores:** Docker, Nginx (Web), PostgreSQL (Base de Datos)
+*   **Directorio Activo:** `talde2.eus`
 
 ---
 
-## 2. Helburuak / Ikasketa-emaitzak (OKD)
+## 🗺️ Arquitectura de Red
 
-### Oinarrizko funtsak
+### Diagrama de Topología Lógica
 
-- **IE1** — Ordenagailuak eta periferikoak sare kableatu/hari gabekoetan integratu eta ebaluatu
-  - Sare-estandarrak identifikatu
-  - IP helbideratze logikoa erabili
-  - Sare-egokigailuak konfiguratu hainbat SEtan
-- **IE2** — Informazioa segurtasunez tratatu eta ahuleziak identifikatu
-  - Segurtasun fisiko vs logiko
-  - Ingeniaritza soziala
-  - Biometria
-  - Kriptografia
-  - Komunikazio-protokolo seguruak
-- **IE3** — Sistema eragileen funtzio aurreratuak administratu
-  - Segurtasun-politika zentralizatuak
-  - Abioko prozesuak/fitxategiak
-  - Konfigurazio-fitxategiak
-  - Prozesuak eta logak aztertu
-- **IE4** — Programa errazak egin datu-baseetan sartuta
-  - Aldagaiak, egitura baldintzatzaile/errepikakorrak
-  - Datu-egiturak, funtzioak, moduluak/paketeak
-  - Errore-kudeaketa
-  - CRUD oinarrizkoa
+```mermaid
+flowchart TD
+    %% Definición de Nodos
+    Internet((🌐 Internet))
+    WAN[🛡️ pfSense WAN<br/>192.168.0.2]
+    DMZ[🖥️ VLAN 10 - DMZ<br/>Web Server 192.168.10.1<br/>Docker + Nginx]
+    CLI[💻 VLAN 20 - Clientes<br/>Erabiltzaileak]
+    SRV[🗄️ VLAN 30 - Servidores<br/>AD 192.168.30.1 / DB .2<br/>Docker + PostgreSQL]
+    SIS[⚙️ VLAN 40 - Sistemas<br/>Admin 192.168.40.35-38]
 
-### Sareak eta sistemak gotortzea
+    %% Flujos entrantes
+    Internet -->|Puertos 80, 443| WAN
+    WAN -->|Port Forward| DMZ
 
-- **IE1** — Bideratzailearen oinarrizko funtzioak: konfigurazio-sarbidea, bide estatikoak, konfigurazio-fitxategiak, trafiko-iragazkiak, ACLak, NAT, port forwarding
-- **IE2** — VLANak konfiguratu: sare lokal birtualak, lotura nagusiak, switch/router multilayer, administrazio zentralizatua
+    %% Flujos salientes a Internet
+    DMZ -->|Web y NTP| Internet
+    CLI -->|Cualquier puerto| Internet
+    SRV -->|Web y NTP| Internet
+    SIS -->|Cualquier puerto| Internet
 
-### Ekoizpen seguruan jartzea
+    %% Flujos internos
+    CLI -->|Puertos 80, 443| DMZ
+    CLI -->|Puertos AD y Servidores| SRV
+    DMZ -->|Puerto 5432 PostgreSQL| SRV
 
-- **IE1** — POO oinarriak: objektuak, propietateak/metodoak, metodo estatikoak, eraikitzaileak, liburutegiak
-- **IE2** — Klase anitzeko programak: klaseen sintaxia, herentzia, klase heredatuak, interfazeak
-- **IE3** — POO ezaugarri aurreratuak: superklase/azpiklase, hierarkiak diseinatu/probatu
+    %% Flujos de Administración
+    SIS -->|SSH / Proxmox / pgAdmin| SRV
+    SIS -->|SSH| DMZ
+    SIS -->|GUI Web| WAN
 
-### Auzitegi-analisi informatikoa
+    %% Estilos (Colores)
+    classDef internet fill:#f9f9f9,stroke:#333,stroke-width:2px,color:#000;
+    classDef firewall fill:#ffe6e6,stroke:#cc0000,stroke-width:2px,color:#000;
+    classDef dmz fill:#e6f3ff,stroke:#0066cc,stroke-width:2px,color:#000;
+    classDef clientes fill:#e6ffe6,stroke:#009933,stroke-width:2px,color:#000;
+    classDef servidores fill:#fff3e0,stroke:#ff6600,stroke-width:2px,color:#000;
+    classDef sistemas fill:#f3e6ff,stroke:#6600cc,stroke-width:2px,color:#000;
 
-- **IE1** — Metodologiak aplikatu (babeste, eskuratze, analisi, dokumentatze fasean): gailuak identifikatu, ebidentziak eskuratu, zaintza-katea, denbora-lerroa, ondorio-txostena (teknikoa/exekutiboa)
+    class Internet internet;
+    class WAN firewall;
+    class DMZ dmz;
+    class CLI clientes;
+    class SRV servidores;
+    class SIS sistemas;
+```
 
-### Hacking etikoa
+### Direccionamiento IP y VLANs
 
-- **IE1** — Monitorizazio-tresnak zehaztu: intrusio-testaren irismena, ahulezia/eraso-motak, merkatuko tresnak erakunde motaren arabera
+| VLAN ID | Nombre | Subred (CIDR) | Gateway | DHCP | Propósito |
+| :---: | :--- | :--- | :--- | :---: | :--- |
+| **10** | DMZ | 192.168.10.0/24 | 192.168.10.254 | No | Servidor Web (Docker/Nginx) |
+| **20** | Erabiltzaileak | 192.168.20.0/24 | 192.168.20.254 | Sí | Clientes / Equipos de aula |
+| **30** | Zerbitzariak | 192.168.30.0/24 | 192.168.30.254 | No | Servidores (AD, Docker/PostgreSQL) |
+| **40** | Sistemak | 192.168.40.0/24 | 192.168.40.254 | No | Administración y Sistemas |
 
-### Zibersegurtasunaren arloko araudia
+### Dispositivos de Red
 
-- **IE1** — Betetze-puntuak eta erantzukizunak identifikatu: araudi-oinarriak, gobernu ona, politikak/prozedurak, arduradunaren eginkizunak, hirugarrenekiko harremanak
-- **IE2** — Legeria/jurisprudentzia aplikatu: ISO 19600, ISO 31000, dokumentazioa
+| Hostname | Tipo | Fabricante / Modelo | IP gestión | Ubicación | Firmware | Rol |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **MikroTik** | Router/Switch | MikroTik | 192.168.0.2 | Rack | RouterOS | Borde / NAT |
+| **pfSense** | Firewall | Netgate (VM) | 192.168.0.2 | Proxmox | pfSense CE | Firewall / Enrutador |
+| **Proxmox** | Hipervisor | Proxmox VE 9.2.2 | 192.168.0.1 | Rack | 9.2.2 | Virtualización |
 
-### Zibersegurtasuneko gertakariak
+### Enrutamiento y Conmutación
 
-- **IE1** — Prebentzio- eta kontzientziazio-planak: printzipio orokorrak, lanpostuaren babes-araua, kontzientziazio-plana eta materiala, ikuskaritza
-
----
-
-## 3. Zeharkakoak eta Garapena
-
-### Zeharkakoak
-
-| Konpetentzia | Pisua | Nork |
-|---|---|---|
-| Autonomia | 25% | Irakasleak bakarrik |
-| Inplikazioa | 25% | Irakasleak eta ikasleak |
-| Ahozko komunikazioa (aurkezpena) | 20% | Irakasleak bakarrik |
-| Taldeko lana | 30% | Irakasleak eta ikasleak |
-
-### Garapena
-
-| Konpetentzia | Pisua |
-|---|---|
-| Planifikazioa | 20% |
-| Dokumentazioa | 40% |
-| Kontrol puntuak (jarraipena) | 40% |
-
----
-
-## 4. Taldeak
-
-Erronka garatzeko, eguneroko lanerako ezarri diren taldeetan egingo da lan (4 pertsonako taldeak).
+*   **Enrutamiento:** Estático entre VLANs gestionado por pfSense.
+*   **NAT:** MikroTik realiza NAT (masquerade) hacia Internet.
+*   **VLAN Trunking:** Configurado 802.1Q en MikroTik (Eth3) y pfSense (vtnet1).
 
 ---
 
-## 5. Ebaluazioa
+## 💻 Sistemas e Infraestructura de Cómputo
 
-| Ehunekoa | 50% | | 50% | | |
-|---|---|---|---|---|---|
-| **%** | 15% | 35% | 10% | 15% | 25% |
-| **Kontzeptua** | Erronkako garapen nota (gehigarriak, aurkezpena) | Ikasgaiko nota teknikoa | Autoebaluazioa | Koebaluazioa | Irakasle guztiek |
-| **Nork ebaluatzen du** | Irakasle guztiek | Ikasgai bakoitzeko irakasleak | Ikasle bakoitzak bere burua | Erronkako taldekideek | Irakasle guztiek |
-| **Errubrika** | OROKORRAK | TEKNIKOA | ZEHARKAKOAK | ZEHARKAKOAK | ZEHARKAKOAK |
+### Inventario de Servidores y Máquinas Virtuales
 
----
+| Hostname | Rol | SO | IP | CPU / RAM / Disco | Entorno | Ubicación |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **WinServerTald2** | AD / DNS | Win Server 2019 | 192.168.30.1 | 4 vCPU / 16 GB / 99.4 GB | PROD | Proxmox (VM 101) |
+| **Ubu-Server-Web** | Web (Docker/Nginx) | Ubuntu | 192.168.10.1 | 2 vCPU / 4 GB / 20 GB | DMZ | Proxmox (VM 102) |
+| **Ubu-Server-DB** | BD (Docker/PostgreSQL) | Ubuntu | 192.168.30.2 | 2 vCPU / 8 GB / 30 GB | PROD | Proxmox (VM 103) |
+| **PfSense** | Firewall | FreeBSD | 192.168.0.2 | 2 vCPU / 4 GB / 20 GB | PROD | Proxmox (VM 100) |
 
-## 6. Denboralizazioa
+### Aplicaciones y Servicios
 
-| Astelehena | Asteartea | Asteazkena | Osteguna | Ostirala |
-|---|---|---|---|---|
-| | | | 10 — KLASEAK - Aurkezpen orokorra | 11 — KLASEAK |
-| 14 — KLASEAK | 15 — KLASEAK | 16 — KLASEAK | 17 — KLASEAK | 18 — KLASEAK |
-| 21 — KLASEAK | 22 — **AZTERKETA** (Oinarriak + Gorabeherak) | 23 — Erronka 1: proposamenaren aurkezpena | 24 — Erronka 1 | 25 — Erronka 1 |
-| 28 — Erronka 1 | 29 — Erronka 1 | 30 — Erronka 1 | 1 — Erronka 1 | 2 — Erronka 1 |
-| 5 — Erronka 1: **aurkezpena** | | | | |
+| Aplicación | Versión | Servidor | Puerto | URL | Criticidad |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Nginx (Docker)** | Última | Ubu-Server-Web | 80, 443 | https://... | Alta |
+| **PostgreSQL (Docker)** | PostgreSQL 16 | Ubu-Server-DB | 5432 | - | Alta |
+| **Active Directory** | Win Server 2019 | WinServerTald2 | 53, 88, 389... | - | Alta |
 
 ---
 
-## Lizentzia
+## 🔒 Seguridad y Firewall
 
-Lan hau **UNIEIBAR-ERMUA**k sortu du eta **Creative Commons CC-BY** lizentziarekin banatzen da.
+### Matriz de Comunicación (Origen ➔ Destino)
+
+| Origen \ Destino | Internet (WAN) | pfSense (GUI/DNS) | VLAN 10 (DMZ) | VLAN 20 (Clientes) | VLAN 30 (Servidores) | VLAN 40 (Sistemas) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Internet** | - | ❌ | ✅ **80, 443** (Web) | ❌ | ❌ | ❌ |
+| **pfSense** | ✅ | - | ✅ | ✅ | ✅ | ✅ |
+| **VLAN 10 (DMZ)** | ✅ **80, 443, 123** | ⚠️ Solo DNS (53) | - | ❌ | ✅ **5432** (Web a DB) | ❌ |
+| **VLAN 20 (Clientes)** | ✅ **Cualquiera** | ⚠️ Solo DNS (53) | ✅ **80, 443** (Web) | - | ✅ **AD, Web, Servidores** | ❌ |
+| **VLAN 30 (Servidores)** | ✅ **80, 443, 123** | ⚠️ Solo DNS (53) | ❌ | ❌ | - | ❌ |
+| **VLAN 40 (Sistemas)** | ✅ **Cualquiera** | ✅ **GUI (Admin)** | ✅ **SSH** (Admin) | ❌ | ✅ **SSH, Proxmox, pgAdmin** | - |
+
+*   ✅ **Permitido** (con puertos específicos indicados si aplica).
+*   ❌ **Bloqueado** (explícita o implícitamente por reglas de denegación).
+*   ⚠️ **Permitido solo para servicios específicos** (ej. DNS hacia pfSense).
+*   **Admin** = Solo permitido desde las IPs de administración (`ADMIN_HOSTS`: 192.168.40.35-38).
+
+### Políticas de Seguridad Implementadas
+
+*   **Segmentación Estricta:** Por defecto, las VLANs no pueden comunicarse entre sí a menos que exista una regla explícita.
+*   **VLAN 40 (Sistemas):** Única VLAN con privilegios de administración (GUI pfSense, SSH, Proxmox).
+*   **VLAN 20 (Clientes):** Acceso web a DMZ y servicios esenciales de AD, sin administración de infraestructura.
+*   **VLAN 10 (DMZ):** Servidor web aislado. Solo puede salir a Internet y conectar a BD en VLAN 30.
+*   **VLAN 30 (Servidores):** Solo salida a Internet (Web y NTP) y respuesta a conexiones entrantes.
+*   **Internet ➔ DMZ:** Acceso entrante estrictamente limitado a puertos 80 y 443.
+
+---
+
+## 🛠️ Operación y Soporte
+
+### Procedimientos Operativos
+*   Arranque y parada ordenada de las VMs en Proxmox.
+*   Despliegue de contenedores Docker en `Ubu-Server-Web` y `Ubu-Server-DB`.
+*   Gestión de usuarios y GPOs en Active Directory (`talde2.eus`).
+*   Restauración de copias de seguridad.
+
+### Copias de Seguridad
+*   **Proxmox:** Snapshots y backups completos en almacenamiento `local` y `local-lvm`.
+*   **PostgreSQL:** Backups programados dentro del contenedor Docker.
+
+### Riesgos y Deuda Técnica
+*   **R-01:** Dependencia de un único host Proxmox (SPOF - Single Point of Failure).
+*   **R-02:** Contenedores Docker sin orquestación (Kubernetes/Swarm) para alta disponibilidad.
+
+---
+
+## 📂 Estructura del Repositorio
+
+```text
+/
+├── README.md                 # Este archivo
+├── docs/                     # Documentación detallada en Word/PDF
+│   └── Documentacion_Red_y_Sistemas.docx
+├── diagrams/                 # Diagramas de red y arquitectura
+│   ├── topologia.png
+│   └── mikrotik_interfaces.png
+├── docker/                   # Archivos de configuración de Docker
+│   ├── web/
+│   │   ├── Dockerfile
+│   │   └── nginx.conf
+│   └── db/
+│       ├── Dockerfile
+│       └── init.sql
+└── proxmox/                  # Scripts de despliegue o backups de Proxmox
+    └── backup_config.sh
+```
+
+---
