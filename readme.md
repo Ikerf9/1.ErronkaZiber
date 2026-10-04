@@ -186,12 +186,16 @@ flowchart TD
 │   └── mikrotik_interfaces.png
 ├── backups/                  # pfSense eta MikroTik-en babeskopiak
 │   └── Backups-20261003T130145Z-1-001.zip
-└── docker/                   # Docker fitxategiak
-    ├── db/
-    │   └── docker-compose.yml
-    └── web/
-        ├── docker-compose.yml
-        └── Dockerfile
+├── docker/                   # Docker fitxategiak
+│   ├── db/
+│   │   └── docker-compose.yml
+│   └── web/
+│       ├── docker-compose.yml
+│       └── Dockerfile
+└── images/
+    ├── ActiveDirectory.png
+    ├── ...
+    ...
 ```
 
 ---
