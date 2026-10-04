@@ -1,0 +1,40 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: matriculas-app
+    container_name: matriculas-app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    networks:
+      - matriculas-network
+
+  web:
+    image: nginx:alpine
+    container_name: matriculas-web
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./certs/talde2.crt:/etc/nginx/ssl/talde2.crt:ro
+      - ./certs/talde2.key:/etc/nginx/ssl/talde2.key:ro
+    networks:
+      - matriculas-network
+    depends_on:
+      - app
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  matriculas-network:
+    driver: bridge

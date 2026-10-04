@@ -112,9 +112,11 @@ flowchart TD
 
 | Aplicación | Versión | Servidor | Puerto | URL | Criticidad |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Nginx (Docker)** | Última | Ubu-Server-Web | 80, 443 | https://192.168.74.60 | Alta |
+| **Nginx (proxy inverso)** | Alpine (Docker) | Ubu-Server-Web | 80, 443 | https://192.168.74.60 | Alta |
+| **Matrículas (Laravel)** | - | Ubu-Server-Web | 9000 (interno, PHP-FPM) | - (tras Nginx) | Alta |
 | **PostgreSQL (Docker)** | PostgreSQL 16 | Ubu-Server-DB | 5432 | - | Alta |
-| **Active Directory** | Win Server 2019 | WinServerTald2 | 80, 443, 445, 631, 9100, 3389, 22 | - | Alta |
+| **pgAdmin** | 4 (latest) | Ubu-Server-DB | 5050 | http://192.168.30.2:5050 | Media |
+| **Active Directory (AD DS/DNS)** | Win Server 2019 | WinServerTald2 | 53, 88, 123, 135, 389, 445, 464, 636, 3268-3269, 49152-65535 | - | Alta |
 
 ---
 
@@ -122,19 +124,20 @@ flowchart TD
 
 ### Matriz de Comunicación (Origen ➔ Destino)
 
-| Origen \ Destino | Internet (WAN) | pfSense (GUI/DNS) | VLAN 10 (DMZ) | VLAN 20 (Clientes) | VLAN 30 (Servidores) | VLAN 40 (Sistemas) |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Internet** | - | ❌ | ✅ **80, 443** (Web) | ❌ | ❌ | ❌ |
-| **pfSense** | ✅ | - | ✅ | ✅ | ✅ | ✅ |
-| **VLAN 10 (DMZ)** | ✅ **80, 443, 123** | ⚠️ Solo DNS (53) | - | ❌ | ✅ **5432** (Web a DB) | ❌ |
-| **VLAN 20 (Clientes)** | ✅ **Cualquiera** | ⚠️ Solo DNS (53) | ✅ **80, 443** (Web) | - | ✅ **AD, Web, Servidores** | ❌ |
-| **VLAN 30 (Servidores)** | ✅ **80, 443, 123** | ⚠️ Solo DNS (53) | ❌ | ❌ | - | ❌ |
-| **VLAN 40 (Sistemas)** | ✅ **Cualquiera** | ✅ **GUI (Admin)** | ✅ **SSH** (Admin) | ❌ | ✅ **SSH, Proxmox, pgAdmin** | - |
+| Origen \ Destino | Internet (WAN) | pfSense (GUI/DNS) | VLAN 10 (DMZ) | VLAN 20 (Clientes) | VLAN 30 (Servidores) | VLAN 40 (Sistemas) | Proxmox (gestión) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Internet** | - | ❌ | ✅ **80, 443** (Web) | ❌ | ❌ | ❌ | ❌ |
+| **pfSense** | ✅ | - | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **VLAN 10 (DMZ)** | ✅ **80, 443, 123** | ⚠️ Solo DNS (53) | - | ❌ | ✅ **5432** (Web a DB) | ❌ | ❌ |
+| **VLAN 20 (Clientes)** | ✅ **Cualquiera** | ⚠️ Solo DNS (53) | ✅ **80, 443** (Web) | - | ✅ **AD, Web, Servidores** | ❌ | ❌ |
+| **VLAN 30 (Servidores)** | ✅ **80, 443, 123** | ⚠️ Solo DNS (53) | ❌ | ❌ | - | ❌ | ❌ |
+| **VLAN 40 (Sistemas)** | ✅ **Cualquiera** | ✅ **GUI (Admin)** | ✅ **SSH** (Admin) | ❌ | ✅ **SSH, pgAdmin** (Admin) | - | ✅ **Web/SSH** (Admin) |
 
 *   ✅ **Permitido** (con puertos específicos indicados si aplica).
 *   ❌ **Bloqueado** (explícita o implícitamente por reglas de denegación).
 *   ⚠️ **Permitido solo para servicios específicos** (ej. DNS hacia pfSense).
 *   **Admin** = Solo permitido desde las IPs de administración (`ADMIN_HOSTS`: 192.168.40.35-38).
+*   **Proxmox** (192.168.0.1) está en la red de gestión/tránsito, fuera de las 4 VLANs — no forma parte de la VLAN 30 (Servidores).
 
 ### Políticas de Seguridad Implementadas
 
@@ -144,6 +147,7 @@ flowchart TD
 *   **VLAN 10 (DMZ):** Servidor web aislado. Solo puede salir a Internet y conectar a BD en VLAN 30.
 *   **VLAN 30 (Servidores):** Solo salida a Internet (Web y NTP) y respuesta a conexiones entrantes.
 *   **Internet ➔ DMZ:** Acceso entrante estrictamente limitado a puertos 80 y 443.
+*   **Anti VLAN-hopping:** Puertos de acceso del MikroTik restringidos a tráfico untagged de su propia VLAN (`frame-types` + `ingress-filtering`).
 
 ---
 
@@ -171,12 +175,19 @@ flowchart TD
 /
 ├── README.md                 # Este archivo
 ├── docs/                     # Documentación detallada en Word/PDF
+│   ├── Documentacion_Red_y_Sistemas_ES.docx
 │   └── Documentacion_Red_y_Sistemas.docx
 ├── diagrams/                 # Diagramas de red y arquitectura
 │   ├── topologia.png
 │   └── mikrotik_interfaces.png
-└── backups/                  # Backups de Pfsense y Mikrotik
-    └── Backups-20261003T130145Z-1-001.zip
+├── backups/                  # Backups de Pfsense y Mikrotik
+│   └── Backups-20261003T130145Z-1-001.zip
+└── docker/                   # Archivos de docker
+    ├── db/
+    │   └── docker-compose.yml
+    └── web/
+        ├── docker-compose.yml
+        └── Dockerfile
 ```
 
 ---
