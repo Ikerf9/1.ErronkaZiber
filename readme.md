@@ -1,62 +1,62 @@
-# 🛡️ Documentación de Red y Sistemas — Erronka 1 (Talde 2)
+# 🛡️ Sare eta Sistemen Dokumentazioa — Erronka 1 (Talde 2)
 
 ![Proxmox](https://img.shields.io/badge/Proxmox-VE%209.2.2-E35A44?style=flat-square&logo=proxmox)
 ![pfSense](https://img.shields.io/badge/pfSense-Firewall-005A8E?style=flat-square)
-![Docker](https://img.shields.io/badge/Docker-Contenedores-2496ED?style=flat-square&logo=docker)
-![Nginx](https://img.shields.io/badge/Nginx-Servidor%20Web-009639?style=flat-square&logo=nginx)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Base%20de%20Datos-4169E1?style=flat-square&logo=postgresql)
+![Docker](https://img.shields.io/badge/Docker-Edukiontziak-2496ED?style=flat-square&logo=docker)
+![Nginx](https://img.shields.io/badge/Nginx-Web%20Zerbitzaria-009639?style=flat-square&logo=nginx)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Datu%20basea-4169E1?style=flat-square&logo=postgresql)
 
-## 📖 Descripción General
+## 📖 Deskribapen orokorra
 
-Este repositorio contiene la documentación técnica y la arquitectura de la infraestructura de red y sistemas para el **Reto 1: Asentando las bases** (Proyecto Erronka 1 - Talde 2, Eskola).
+Biltegi honek **Erronka 1: Oinarriak ezartzen** erronkarako (Erronka 1 - Talde 2 proiektua, Eskola) sare- eta sistema-azpiegituraren dokumentazio teknikoa eta arkitektura biltzen ditu.
 
-El objetivo es desplegar una arquitectura de red segmentada, bastionada y monitorizada. La infraestructura está diseñada para alojar los servicios del proyecto (sitio web, base de datos, gestión de usuarios y cursos) de forma segura, aplicando medidas de prevención, concienciación y respuesta ante incidentes.
+Helburua sare-arkitektura segmentatu, gotortu eta monitorizatu bat hedatzea da. Azpiegitura proiektuaren zerbitzuak (webgunea, datu-basea, erabiltzaileen eta ikastaroen kudeaketa) modu seguruan ostatatzeko diseinatuta dago, prebentzio-, kontzientziazio- eta gorabeheren aurkako erantzun-neurriak aplikatuz.
 
-### 🛠️ Stack Tecnológico
+### 🛠️ Stack teknologikoa
 
-*   **Virtualización:** Proxmox VE 9.2.2 (Nodo `talde2`)
-*   **Red y Seguridad:** MikroTik (Router de borde), pfSense (Firewall y enrutamiento inter-VLAN)
-*   **Servidores:** Windows Server 2019 (AD/DNS), Ubuntu Server (Servicios)
-*   **Servicios y Contenedores:** Docker, Nginx (Web), PostgreSQL (Base de Datos)
-*   **Directorio Activo:** `talde2.eus`
+*   **Birtualizazioa:** Proxmox VE 9.2.2 (`talde2` nodoa)
+*   **Sarea eta segurtasuna:** MikroTik (ertzeko routerra), pfSense (firewall-a eta VLAN arteko bideratzea)
+*   **Zerbitzariak:** Windows Server 2019 (AD/DNS), Ubuntu Server (zerbitzuak)
+*   **Zerbitzuak eta edukiontziak:** Docker, Nginx (Web), PostgreSQL (datu-basea)
+*   **Active Directory:** `talde2.eus`
 
 ---
 
-## 🗺️ Arquitectura de Red
+## 🗺️ Sare-arkitektura
 
-### Diagrama de Topología Lógica
+### Topologia logikoaren diagrama
 
 ```mermaid
 flowchart TD
-    %% Definición de Nodos
+    %% Nodoen definizioa
     Internet((🌐 Internet))
     WAN[🛡️ pfSense WAN<br/>192.168.0.2]
-    DMZ[🖥️ VLAN 10 - DMZ<br/>Web Server 192.168.10.1<br/>Docker + Nginx]
-    CLI[💻 VLAN 20 - Clientes<br/>Erabiltzaileak]
-    SRV[🗄️ VLAN 30 - Servidores<br/>AD 192.168.30.1 / DB .2<br/>Docker + PostgreSQL]
-    SIS[⚙️ VLAN 40 - Sistemas<br/>Admin 192.168.40.35-38]
+    DMZ[🖥️ VLAN 10 - DMZ<br/>Web zerbitzaria 192.168.10.1<br/>Docker + Nginx]
+    CLI[💻 VLAN 20 - Bezeroak<br/>Erabiltzaileak]
+    SRV[🗄️ VLAN 30 - Zerbitzariak<br/>AD 192.168.30.1 / DB .2<br/>Docker + PostgreSQL]
+    SIS[⚙️ VLAN 40 - Sistemak<br/>Admin 192.168.40.35-38]
 
-    %% Flujos entrantes
-    Internet -->|Puertos 80, 443| WAN
+    %% Sarrerako fluxuak
+    Internet -->|80, 443 portuak| WAN
     WAN -->|Port Forward| DMZ
 
-    %% Flujos salientes a Internet
-    DMZ -->|Web y NTP| Internet
-    CLI -->|Cualquier puerto| Internet
-    SRV -->|Web y NTP| Internet
-    SIS -->|Cualquier puerto| Internet
+    %% Internetera irteerako fluxuak
+    DMZ -->|Weba eta NTP| Internet
+    CLI -->|Edozein portu| Internet
+    SRV -->|Weba eta NTP| Internet
+    SIS -->|Edozein portu| Internet
 
-    %% Flujos internos
-    CLI -->|Puertos 80, 443| DMZ
-    CLI -->|Puertos AD y Servidores| SRV
-    DMZ -->|Puerto 5432 PostgreSQL| SRV
+    %% Barne-fluxuak
+    CLI -->|80, 443 portuak| DMZ
+    CLI -->|AD eta Zerbitzarien portuak| SRV
+    DMZ -->|5432 portua PostgreSQL| SRV
 
-    %% Flujos de Administración
+    %% Administrazio-fluxuak
     SIS -->|SSH / Proxmox / pgAdmin| SRV
     SIS -->|SSH| DMZ
-    SIS -->|GUI Web| WAN
+    SIS -->|Web GUI| WAN
 
-    %% Estilos (Colores)
+    %% Estiloak (koloreak)
     classDef internet fill:#f9f9f9,stroke:#333,stroke-width:2px,color:#000;
     classDef firewall fill:#ffe6e6,stroke:#cc0000,stroke-width:2px,color:#000;
     classDef dmz fill:#e6f3ff,stroke:#0066cc,stroke-width:2px,color:#000;
@@ -72,117 +72,121 @@ flowchart TD
     class SIS sistemas;
 ```
 
-### Direccionamiento IP y VLANs
+### IP helbideratzea eta VLANak
 
-| VLAN ID | Nombre | Subred (CIDR) | Gateway | DHCP | Propósito |
+| VLAN ID | Izena | Azpisarea (CIDR) | Gateway | DHCP | Helburua |
 | :---: | :--- | :--- | :--- | :---: | :--- |
-| **10** | DMZ | 192.168.10.0/24 | 192.168.10.254 | No | Servidor Web (Docker/Nginx) |
-| **20** | Erabiltzaileak | 192.168.20.0/24 | 192.168.20.254 | Sí | Clientes / Equipos de aula |
-| **30** | Zerbitzariak | 192.168.30.0/24 | 192.168.30.254 | No | Servidores (AD, Docker/PostgreSQL) |
-| **40** | Sistemak | 192.168.40.0/24 | 192.168.40.254 | No | Administración y Sistemas |
+| **10** | DMZ | 192.168.10.0/24 | 192.168.10.254 | Ez | Web-zerbitzaria (Docker/Nginx) |
+| **20** | Erabiltzaileak | 192.168.20.0/24 | 192.168.20.254 | Bai | Bezeroak / Ikasgelako ekipoak |
+| **30** | Zerbitzariak | 192.168.30.0/24 | 192.168.30.254 | Ez | Zerbitzariak (AD, Docker/PostgreSQL) |
+| **40** | Sistemak | 192.168.40.0/24 | 192.168.40.254 | Ez | Administrazioa eta Sistemak |
 
-### Dispositivos de Red
+### Sare-gailuak
 
-| Hostname | Tipo | Fabricante / Modelo | IP gestión | Ubicación | Firmware | Rol |
+| Hostname | Mota | Fabrikatzailea / Eredua | Kudeaketa-IPa | Kokalekua | Firmware | Eginkizuna |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **MikroTik** | Router/Switch | MikroTik | 192.168.0.254 | Rack | RouterOS | Borde / NAT |
-| **pfSense** | Firewall | Netgate (VM) | 192.168.0.2 | Proxmox | pfSense CE | Firewall / Enrutador |
-| **Proxmox** | Hipervisor | Proxmox VE 9.2.2 | 192.168.0.1 | Rack | 9.2.2 | Virtualización |
+| **MikroTik** | Router/Switch | MikroTik | 192.168.0.254 | Rack | RouterOS | Ertza / NAT |
+| **pfSense** | Firewall | Netgate (VM) | 192.168.0.2 | Proxmox | pfSense CE | Firewall-a / Bideratzailea |
+| **Proxmox** | Hipervisorea | Proxmox VE 9.2.2 | 192.168.0.1 | Rack | 9.2.2 | Birtualizazioa |
 
-### Enrutamiento y Conmutación
+### Bideratzea eta konmutazioa
 
-*   **Enrutamiento:** Estático entre VLANs gestionado por pfSense.
-*   **NAT:** MikroTik realiza NAT (masquerade) hacia Internet.
-*   **VLAN Trunking:** Configurado 802.1Q en MikroTik (Eth3) y pfSense (vtnet1).
+*   **Bideratzea:** VLAN arteko bideratze estatikoa, pfSense-k kudeatua.
+*   **NAT:** MikroTik-ek NAT (masquerade) egiten du Internetera begira.
+*   **VLAN Trunking:** 802.1Q konfiguratuta MikroTik-en (Eth3) eta pfSense-n (vtnet1).
 
 ---
 
-## 💻 Sistemas e Infraestructura de Cómputo
+## 💻 Sistemak eta konputazio-azpiegitura
 
-### Inventario de Servidores y Máquinas Virtuales
+### Zerbitzarien eta makina birtualen inbentarioa
 
-| Hostname | Rol | SO | IP | CPU / RAM / Disco | Entorno | Ubicación |
+| Hostname | Eginkizuna | SE | IP | CPU / RAM / Diskoa | Ingurunea | Kokalekua |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **WinServerTald2** | AD / DNS | Win Server 2019 | 192.168.30.1 | 4 vCPU / 16 GB / 99.4 GB | PROD | Proxmox (VM 101) |
 | **Ubu-Server-Web** | Web (Docker/Nginx) | Ubuntu | 192.168.10.1 | 2 vCPU / 4 GB / 20 GB | DMZ | Proxmox (VM 102) |
-| **Ubu-Server-DB** | BD (Docker/PostgreSQL) | Ubuntu | 192.168.30.2 | 2 vCPU / 8 GB / 30 GB | PROD | Proxmox (VM 103) |
+| **Ubu-Server-DB** | DB (Docker/PostgreSQL) | Ubuntu | 192.168.30.2 | 2 vCPU / 8 GB / 30 GB | PROD | Proxmox (VM 103) |
 | **PfSense** | Firewall | FreeBSD | 192.168.0.2 | 2 vCPU / 4 GB / 20 GB | PROD | Proxmox (VM 100) |
 
-### Aplicaciones y Servicios
+### Aplikazioak eta zerbitzuak
 
-| Aplicación | Versión | Servidor | Puerto | URL | Criticidad |
+| Aplikazioa | Bertsioa | Zerbitzaria | Portua | URL | Kritikotasuna |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Nginx (proxy inverso)** | Alpine (Docker) | Ubu-Server-Web | 80, 443 | https://192.168.74.60 | Alta |
-| **Matrículas (Laravel)** | - | Ubu-Server-Web | 9000 (interno, PHP-FPM) | - (tras Nginx) | Alta |
-| **PostgreSQL (Docker)** | PostgreSQL 16 | Ubu-Server-DB | 5432 | - | Alta |
-| **pgAdmin** | 4 (latest) | Ubu-Server-DB | 5050 | http://192.168.30.2:5050 | Media |
-| **Active Directory (AD DS/DNS)** | Win Server 2019 | WinServerTald2 | 53, 88, 123, 135, 389, 445, 464, 636, 3268-3269, 49152-65535 | - | Alta |
+| **Nginx (alderantzizko proxya)** | Alpine (Docker) | Ubu-Server-Web | 80, 443 | https://192.168.74.60 | Altua |
+| **Matrikulak (Laravel)** | - | Ubu-Server-Web | 9000 (barnekoa, PHP-FPM) | - (Nginx atzean) | Altua |
+| **PostgreSQL (Docker)** | PostgreSQL 16 | Ubu-Server-DB | 5432 | - | Altua |
+| **pgAdmin** | 4 (latest) | Ubu-Server-DB | 5050 | http://192.168.30.2:5050 | Ertaina |
+| **Active Directory (AD DS/DNS)** | Win Server 2019 | WinServerTald2 | 53, 88, 123, 135, 389, 445, 464, 636, 3268-3269, 49152-65535 | - | Altua |
 
 ---
 
-## 🔒 Seguridad y Firewall
+## 🔒 Segurtasuna eta firewall-a
 
-### Matriz de Comunicación (Origen ➔ Destino)
+### Komunikazio-matrizea (Jatorria ➔ Helmuga)
 
-| Origen \ Destino | Internet (WAN) | pfSense (GUI/DNS) | VLAN 10 (DMZ) | VLAN 20 (Clientes) | VLAN 30 (Servidores) | VLAN 40 (Sistemas) | Proxmox (gestión) |
+| Jatorria \ Helmuga | Internet (WAN) | pfSense (GUI/DNS) | VLAN 10 (DMZ) | VLAN 20 (Bezeroak) | VLAN 30 (Zerbitzariak) | VLAN 40 (Sistemak) | Proxmox (kudeaketa) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Internet** | - | ❌ | ✅ **80, 443** (Web) | ❌ | ❌ | ❌ | ❌ |
+| **Internet** | - | ❌ | ✅ **80, 443** (Weba) | ❌ | ❌ | ❌ | ❌ |
 | **pfSense** | ✅ | - | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **VLAN 10 (DMZ)** | ✅ **80, 443, 123** | ⚠️ Solo DNS (53) | - | ❌ | ✅ **5432** (Web a DB) | ❌ | ❌ |
-| **VLAN 20 (Clientes)** | ✅ **Cualquiera** | ⚠️ Solo DNS (53) | ✅ **80, 443** (Web) | - | ✅ **AD, Web, Servidores** | ❌ | ❌ |
-| **VLAN 30 (Servidores)** | ✅ **80, 443, 123** | ⚠️ Solo DNS (53) | ❌ | ❌ | - | ❌ | ❌ |
-| **VLAN 40 (Sistemas)** | ✅ **Cualquiera** | ✅ **GUI (Admin)** | ✅ **SSH** (Admin) | ❌ | ✅ **SSH, pgAdmin** (Admin) | - | ✅ **Web/SSH** (Admin) |
+| **VLAN 10 (DMZ)** | ✅ **80, 443, 123** | ⚠️ DNS soilik (53) | - | ❌ | ✅ **5432** (Web-etik DB-ra) | ❌ | ❌ |
+| **VLAN 20 (Bezeroak)** | ✅ **Edozein** | ⚠️ DNS soilik (53) | ✅ **80, 443** (Weba) | - | ✅ **AD, Weba, Zerbitzariak** | ❌ | ❌ |
+| **VLAN 30 (Zerbitzariak)** | ✅ **80, 443, 123** | ⚠️ DNS soilik (53) | ❌ | ❌ | - | ❌ | ❌ |
+| **VLAN 40 (Sistemak)** | ✅ **Edozein** | ✅ **GUI (Admin)** | ✅ **SSH** (Admin) | ❌ | ✅ **SSH, pgAdmin** (Admin) | - | ✅ **Web/SSH** (Admin) |
 
-*   ✅ **Permitido** (con puertos específicos indicados si aplica).
-*   ❌ **Bloqueado** (explícita o implícitamente por reglas de denegación).
-*   ⚠️ **Permitido solo para servicios específicos** (ej. DNS hacia pfSense).
-*   **Admin** = Solo permitido desde las IPs de administración (`ADMIN_HOSTS`: 192.168.40.35-38).
-*   **Proxmox** (192.168.0.1) está en la red de gestión/tránsito, fuera de las 4 VLANs — no forma parte de la VLAN 30 (Servidores).
+*   ✅ **Baimendua** (portu zehatzak adierazita, aplikatzen bada).
+*   ❌ **Blokeatua** (esplizituki edo inplizituki, ukatze-arauen bidez).
+*   ⚠️ **Zerbitzu zehatzetarako soilik baimendua** (adib. DNS pfSense-rantz).
+*   **Admin** = Administrazio-IPetatik soilik baimendua (`ADMIN_HOSTS`: 192.168.40.35-38).
+*   **Proxmox** (192.168.0.1) kudeaketa/trantsizio-sarean dago, 4 VLANen kanpo — ez da 30. VLANaren (Zerbitzariak) parte.
 
-### Políticas de Seguridad Implementadas
+### Ezarritako segurtasun-politikak
 
-*   **Segmentación Estricta:** Por defecto, las VLANs no pueden comunicarse entre sí a menos que exista una regla explícita.
-*   **VLAN 40 (Sistemas):** Única VLAN con privilegios de administración (GUI pfSense, SSH, Proxmox).
-*   **VLAN 20 (Clientes):** Acceso web a DMZ y servicios esenciales de AD, sin administración de infraestructura.
-*   **VLAN 10 (DMZ):** Servidor web aislado. Solo puede salir a Internet y conectar a BD en VLAN 30.
-*   **VLAN 30 (Servidores):** Solo salida a Internet (Web y NTP) y respuesta a conexiones entrantes.
-*   **Internet ➔ DMZ:** Acceso entrante estrictamente limitado a puertos 80 y 443.
-*   **Anti VLAN-hopping:** Puertos de acceso del MikroTik restringidos a tráfico untagged de su propia VLAN (`frame-types` + `ingress-filtering`).
-
----
-
-## 🛠️ Operación y Soporte
-
-### Procedimientos Operativos
-*   Arranque y parada ordenada de las VMs en Proxmox.
-*   Despliegue de contenedores Docker en `Ubu-Server-Web` y `Ubu-Server-DB`.
-*   Gestión de usuarios y GPOs en Active Directory (`talde2.eus`).
-*   Restauración de copias de seguridad.
-
-### Copias de Seguridad
-*   **Proxmox:** Snapshots y backups completos en almacenamiento `local` y `local-lvm`.
-*   **PostgreSQL:** Backups programados dentro del contenedor Docker.
-
-### Riesgos y Deuda Técnica
-*   **R-01:** Dependencia de un único host Proxmox (SPOF - Single Point of Failure).
-*   **R-02:** Contenedores Docker sin orquestación (Kubernetes/Swarm) para alta disponibilidad.
+*   **Segmentazio zorrotza:** Lehenespenez, VLANek ezin dute elkarrekin komunikatu arau esplizitu bat egon ezean.
+*   **VLAN 40 (Sistemak):** Administrazio-pribilegioak dituen VLAN bakarra (pfSense GUI-a, SSH, Proxmox).
+*   **VLAN 20 (Bezeroak):** DMZ-rako web-sarbidea eta AD-ren funtsezko zerbitzuak, azpiegituraren administraziorik gabe.
+*   **VLAN 10 (DMZ):** Web-zerbitzari isolatua. Internetera irten eta 30. VLANeko DBra konektatu baino ezin du.
+*   **VLAN 30 (Zerbitzariak):** Internetera irteera soilik (Weba eta NTP) eta sarrerako konexioei erantzuna.
+*   **Internet ➔ DMZ:** Sarrerako sarbidea 80 eta 443 portuetara zorrozki mugatua.
+*   **VLAN hopping-aren aurkakoa:** MikroTik-eko sarbide-portuak beren VLANeko untagged trafikora mugatuta (`frame-types` + `ingress-filtering`).
 
 ---
 
-## 📂 Estructura del Repositorio
+## 🛠️ Eragiketa eta euskarria
+
+### Eragiketa-prozedurak
+*   VMen abiarazte eta geldiarazte ordenatua Proxmox-en.
+*   Docker edukiontzien hedapena `Ubu-Server-Web` eta `Ubu-Server-DB` zerbitzarietan.
+*   Erabiltzaileen eta GPOen kudeaketa Active Directory-n (`talde2.eus`).
+*   Babeskopien berreskuratzea.
+
+### Babeskopiak
+*   **Proxmox:** Snapshot-ak eta babeskopia osoak `local` eta `local-lvm` biltegiratzean.
+*   **PostgreSQL:** Docker edukiontziaren barruan programatutako babeskopiak.
+
+### Arriskuak eta zor teknikoa
+*   **R-01:** Proxmox ostalari bakarraren mendekotasuna (SPOF - Single Point of Failure).
+*   **R-02:** Docker edukiontziak orkestraziorik gabe (Kubernetes/Swarm), erabilgarritasun handirako.
+
+---
+
+## 📂 Biltegiaren egitura
 
 ```text
 /
-├── README.md                 # Este archivo
-├── docs/                     # Documentación detallada en Word/PDF
-│   ├── Documentacion_Red_y_Sistemas_ES.docx
-│   └── Documentacion_Red_y_Sistemas.docx
-├── diagrams/                 # Diagramas de red y arquitectura
+├── README.md                 # Fitxategi hau
+├── docs/                     # Dokumentazio xehatua Word/PDF formatuan
+│   ├── ES
+│   │   ├── Documentacion_Red_y_Sistemas.pdf
+│   │   └── Documentacion_Red_y_Sistemas.docx
+│   └── EU
+│       ├── Dokumentazioa_Sarea_eta_Sistemak.pdf
+│       └── Dokumentazioa_Sarea_eta_Sistemak.docx
+├── diagrams/                 # Sare- eta arkitektura-diagramak
 │   ├── topologia.png
 │   └── mikrotik_interfaces.png
-├── backups/                  # Backups de Pfsense y Mikrotik
+├── backups/                  # pfSense eta MikroTik-en babeskopiak
 │   └── Backups-20261003T130145Z-1-001.zip
-└── docker/                   # Archivos de docker
+└── docker/                   # Docker fitxategiak
     ├── db/
     │   └── docker-compose.yml
     └── web/
